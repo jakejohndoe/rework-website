@@ -107,16 +107,44 @@ export default function Home() {
     }
 
     setIsSubmitting(true)
+    setEmailError('') // Clear any existing errors
     
-    // Simulate API call (replace with actual MongoDB integration later)
-    setTimeout(() => {
+    try {
+      const response = await fetch('/api/emails', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: emailValue.trim(),
+          source: 'hero' // Track this as hero form submission
+        }),
+      })
+
+      const data = await response.json()
+
+      if (response.ok) {
+        // Success! Keep all your existing success animation
+        setIsSubmitting(false)
+        setShowSuccess(true)
+        setEmailValue('')
+        
+        // Hide success message after 6 seconds (keeping your existing timing)
+        setTimeout(() => setShowSuccess(false), 6000)
+      } else {
+        // Handle API errors (like duplicate email)
+        setIsSubmitting(false)
+        if (response.status === 409) {
+          setEmailError('This email is already on our waitlist!')
+        } else {
+          setEmailError(data.error || 'Something went wrong. Please try again.')
+        }
+      }
+    } catch (error) {
+      console.error('Email signup error:', error)
       setIsSubmitting(false)
-      setShowSuccess(true)
-      setEmailValue('')
-      
-      // Hide success message after 6 seconds (was 3)
-      setTimeout(() => setShowSuccess(false), 6000)
-    }, 1500)
+      setEmailError('Network error. Please check your connection and try again.')
+    }
   }
 
   const handleSubmitBottom = async (e: React.FormEvent) => {
@@ -133,16 +161,46 @@ export default function Home() {
     }
 
     setIsSubmittingBottom(true)
+    setEmailErrorBottom('') // Clear any existing errors
     
-    setTimeout(() => {
+    try {
+      const response = await fetch('/api/emails', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: emailValueBottom.trim(),
+          source: 'final-cta' // Track this as final CTA form submission
+        }),
+      })
+
+      const data = await response.json()
+
+      if (response.ok) {
+        // Success! Keep all your existing success animation
+        setIsSubmittingBottom(false)
+        setShowSuccessBottom(true)
+        setEmailValueBottom('')
+        
+        // Hide success message after 6 seconds (keeping your existing timing)
+        setTimeout(() => setShowSuccessBottom(false), 6000)
+      } else {
+        // Handle API errors (like duplicate email)
+        setIsSubmittingBottom(false)
+        if (response.status === 409) {
+          setEmailErrorBottom('This email is already on our waitlist!')
+        } else {
+          setEmailErrorBottom(data.error || 'Something went wrong. Please try again.')
+        }
+      }
+    } catch (error) {
+      console.error('Email signup error:', error)
       setIsSubmittingBottom(false)
-      setShowSuccessBottom(true)
-      setEmailValueBottom('')
-      
-      // Hide success message after 6 seconds (was 3)
-      setTimeout(() => setShowSuccessBottom(false), 6000)
-    }, 1500)
+      setEmailErrorBottom('Network error. Please check your connection and try again.')
+    }
   }
+  
   return (
     <div className="flex min-h-screen flex-col relative">
       <CursorEffect />
@@ -790,7 +848,7 @@ export default function Home() {
                 <Link href="#" className="text-gray-400 hover:text-white transition-colors duration-300">Privacy</Link>
               </div>
               <div className="text-xs text-gray-500">
-                © 2024 ReWork. All rights reserved.
+                © 2025 ReWork. All rights reserved.
               </div>
             </div>
           </div>
