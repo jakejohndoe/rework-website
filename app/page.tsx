@@ -847,8 +847,18 @@ export default function Home() {
                 <Link href="#faq" className="text-gray-400 hover:text-white transition-colors duration-300">FAQ</Link>
                 <Link href="#" className="text-gray-400 hover:text-white transition-colors duration-300">Privacy</Link>
               </div>
-              <div className="text-xs text-gray-500">
-                © 2025 ReWork. All rights reserved.
+              <div className="flex items-center gap-3">
+                <div className="text-xs text-gray-500">
+                  © 2025 ReWork. All rights reserved.
+                </div>
+                {/* Subtle admin access - looks like a decoration but is clickable */}
+                <Link 
+                  href="/admin/login" 
+                  className="w-2 h-2 bg-gray-600/30 rounded-full hover:bg-[#2CC7D0]/40 transition-all duration-500 hover:scale-150 cursor-pointer"
+                  title=""
+                >
+                  <span className="sr-only">Admin</span>
+                </Link>
               </div>
             </div>
           </div>
