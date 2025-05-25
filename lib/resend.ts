@@ -20,7 +20,7 @@ export async function sendWelcomeEmail({ email, source = 'unknown' }: WelcomeEma
     const testEmail = process.env.NODE_ENV === 'development' ? 'hello@rework.solutions' : email;
     
     const { data, error } = await resend.emails.send({
-      from: 'ReWork <onboarding@resend.dev>', // You'll customize this later
+      from: 'ReWork <hello@rework.solutions>', // ✅ Updated to custom domain
       to: [testEmail],
       subject: `🚀 Welcome to ReWork - ${email} joined the waitlist!`,
       html: getWelcomeEmailHTML(email, source),
