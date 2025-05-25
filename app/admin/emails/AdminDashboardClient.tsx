@@ -1,6 +1,6 @@
-// app/admin/emails/AdminDashboardClient.tsx
 'use client';
 
+import { analytics } from '@/lib/analytics';
 import { useState } from 'react';
 
 interface EmailSignup {
@@ -81,6 +81,9 @@ export default function AdminDashboardClient({ emails }: { emails: EmailSignup[]
       const response = await fetch('/api/admin/export');
       
       if (response.ok) {
+        // Track successful export
+        analytics.adminEmailExport(emails.length);
+        
         // Get the CSV content
         const blob = await response.blob();
         
@@ -115,6 +118,7 @@ export default function AdminDashboardClient({ emails }: { emails: EmailSignup[]
       setIsExporting(false);
     }
   };
+  
 
   return (
     <div className="min-h-screen relative overflow-hidden">

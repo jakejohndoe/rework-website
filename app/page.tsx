@@ -24,6 +24,7 @@ import { EmailCapture } from "@/components/email-capture"
 import { CursorEffect } from "@/components/cursor-effect"
 import { FloatingElements } from "@/components/floating-elements"
 import { AnimatedSection } from "@/components/animated-section"
+import { analytics } from '@/lib/analytics'
 
 export default function Home() {
   const [highlightEmail, setHighlightEmail] = useState(false)
@@ -40,6 +41,9 @@ export default function Home() {
 
   const handleGetStartedClick = (e: React.MouseEvent) => {
     e.preventDefault()
+    
+    // Track CTA button click
+    analytics.ctaButtonClick('navbar_get_started');
     
     // Check if user is already near the top of the page
     if (window.scrollY < 100) {
@@ -69,6 +73,11 @@ export default function Home() {
     const value = e.target.value
     setEmailValue(value)
     
+    // Track form focus (only once per session)
+    if (value.length === 1) {
+      analytics.emailFormFocus('hero');
+    }
+    
     // Clear error when user starts typing
     if (emailError) setEmailError('')
     
@@ -84,6 +93,11 @@ export default function Home() {
     const value = e.target.value
     setEmailValueBottom(value)
     
+    // Track form focus (only once per session)
+    if (value.length === 1) {
+      analytics.emailFormFocus('final-cta');
+    }
+    
     if (emailErrorBottom) setEmailErrorBottom('')
     
     if (value.length > 0 && !validateEmail(value)) {
@@ -98,13 +112,18 @@ export default function Home() {
     
     if (!emailValue.trim()) {
       setEmailError('Email is required')
+      analytics.formError('hero', 'empty_email');
       return
     }
     
     if (!validateEmail(emailValue)) {
       setEmailError('Please enter a valid email address')
+      analytics.formError('hero', 'invalid_email');
       return
     }
+
+    // Track form submission attempt
+    analytics.emailFormSubmitAttempt('hero');
 
     setIsSubmitting(true)
     setEmailError('') // Clear any existing errors
@@ -124,7 +143,10 @@ export default function Home() {
       const data = await response.json()
 
       if (response.ok) {
-        // Success! Keep all your existing success animation
+        // Success! Track conversion
+        analytics.emailSignup('hero');
+        
+        // Keep all your existing success animation
         setIsSubmitting(false)
         setShowSuccess(true)
         setEmailValue('')
@@ -132,17 +154,28 @@ export default function Home() {
         // Hide success message after 6 seconds (keeping your existing timing)
         setTimeout(() => setShowSuccess(false), 6000)
       } else {
-        // Handle API errors (like duplicate email)
+        // Handle different types of errors
         setIsSubmitting(false)
-        if (response.status === 409) {
+        
+        if (response.status === 429) {
+          // Rate limited
+          analytics.rateLimitHit('hero');
+          analytics.formError('hero', 'rate_limited');
+          setEmailError(data.error || 'Too many requests. Please try again later.')
+        } else if (response.status === 409) {
+          // Duplicate email
+          analytics.formError('hero', 'duplicate_email');
           setEmailError('This email is already on our waitlist!')
         } else {
+          // Other errors
+          analytics.formError('hero', 'api_error');
           setEmailError(data.error || 'Something went wrong. Please try again.')
         }
       }
     } catch (error) {
       console.error('Email signup error:', error)
       setIsSubmitting(false)
+      analytics.formError('hero', 'network_error');
       setEmailError('Network error. Please check your connection and try again.')
     }
   }
@@ -152,13 +185,18 @@ export default function Home() {
     
     if (!emailValueBottom.trim()) {
       setEmailErrorBottom('Email is required')
+      analytics.formError('final-cta', 'empty_email');
       return
     }
     
     if (!validateEmail(emailValueBottom)) {
       setEmailErrorBottom('Please enter a valid email address')
+      analytics.formError('final-cta', 'invalid_email');
       return
     }
+
+    // Track form submission attempt
+    analytics.emailFormSubmitAttempt('final-cta');
 
     setIsSubmittingBottom(true)
     setEmailErrorBottom('') // Clear any existing errors
@@ -178,7 +216,10 @@ export default function Home() {
       const data = await response.json()
 
       if (response.ok) {
-        // Success! Keep all your existing success animation
+        // Success! Track conversion
+        analytics.emailSignup('final-cta');
+        
+        // Keep all your existing success animation
         setIsSubmittingBottom(false)
         setShowSuccessBottom(true)
         setEmailValueBottom('')
@@ -186,17 +227,28 @@ export default function Home() {
         // Hide success message after 6 seconds (keeping your existing timing)
         setTimeout(() => setShowSuccessBottom(false), 6000)
       } else {
-        // Handle API errors (like duplicate email)
+        // Handle different types of errors
         setIsSubmittingBottom(false)
-        if (response.status === 409) {
+        
+        if (response.status === 429) {
+          // Rate limited
+          analytics.rateLimitHit('final-cta');
+          analytics.formError('final-cta', 'rate_limited');
+          setEmailErrorBottom(data.error || 'Too many requests. Please try again later.')
+        } else if (response.status === 409) {
+          // Duplicate email
+          analytics.formError('final-cta', 'duplicate_email');
           setEmailErrorBottom('This email is already on our waitlist!')
         } else {
+          // Other errors
+          analytics.formError('final-cta', 'api_error');
           setEmailErrorBottom(data.error || 'Something went wrong. Please try again.')
         }
       }
     } catch (error) {
       console.error('Email signup error:', error)
       setIsSubmittingBottom(false)
+      analytics.formError('final-cta', 'network_error');
       setEmailErrorBottom('Network error. Please check your connection and try again.')
     }
   }
@@ -229,19 +281,31 @@ export default function Home() {
           </div>
           
           <nav className="hidden md:flex md:items-center md:gap-1">
-            <Link href="#features" className="relative px-3 py-2 text-sm font-medium text-white/90 hover:text-white transition-all duration-300 group rounded-lg hover:bg-white/5 cursor-pointer">
+            <Link 
+              href="#features" 
+              onClick={() => analytics.navigationClick('features')}
+              className="relative px-3 py-2 text-sm font-medium text-white/90 hover:text-white transition-all duration-300 group rounded-lg hover:bg-white/5 cursor-pointer"
+            >
               <span className="relative z-10">Features</span>
               <div className="absolute inset-0 bg-gradient-to-r from-[#2CC7D0]/0 to-[#3A7BF7]/0 group-hover:from-[#2CC7D0]/20 group-hover:to-[#3A7BF7]/20 rounded-lg transition-all duration-300" />
               <div className="absolute -bottom-1 left-3 right-3 h-0.5 bg-gradient-to-r from-[#2CC7D0] to-[#3A7BF7] scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
             </Link>
             
-            <Link href="#how-it-works" className="relative px-3 py-2 text-sm font-medium text-white/90 hover:text-white transition-all duration-300 group rounded-lg hover:bg-white/5 cursor-pointer">
+            <Link 
+              href="#how-it-works"
+              onClick={() => analytics.navigationClick('how-it-works')}
+              className="relative px-3 py-2 text-sm font-medium text-white/90 hover:text-white transition-all duration-300 group rounded-lg hover:bg-white/5 cursor-pointer"
+            >
               <span className="relative z-10">How It Works</span>
               <div className="absolute inset-0 bg-gradient-to-r from-[#2CC7D0]/0 to-[#3A7BF7]/0 group-hover:from-[#2CC7D0]/20 group-hover:to-[#3A7BF7]/20 rounded-lg transition-all duration-300" />
               <div className="absolute -bottom-1 left-3 right-3 h-0.5 bg-gradient-to-r from-[#2CC7D0] to-[#3A7BF7] scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
             </Link>
             
-            <Link href="#faq" className="relative px-3 py-2 text-sm font-medium text-white/90 hover:text-white transition-all duration-300 group rounded-lg hover:bg-white/5 cursor-pointer">
+            <Link 
+              href="#faq"
+              onClick={() => analytics.navigationClick('faq')}
+              className="relative px-3 py-2 text-sm font-medium text-white/90 hover:text-white transition-all duration-300 group rounded-lg hover:bg-white/5 cursor-pointer"
+            >
               <span className="relative z-10">FAQ</span>
               <div className="absolute inset-0 bg-gradient-to-r from-[#2CC7D0]/0 to-[#3A7BF7]/0 group-hover:from-[#2CC7D0]/20 group-hover:to-[#3A7BF7]/20 rounded-lg transition-all duration-300" />
               <div className="absolute -bottom-1 left-3 right-3 h-0.5 bg-gradient-to-r from-[#2CC7D0] to-[#3A7BF7] scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />

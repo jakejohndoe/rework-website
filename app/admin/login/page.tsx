@@ -1,5 +1,6 @@
-// app/admin/login/page.tsx
 "use client"
+
+import { analytics } from '@/lib/analytics';
 
 import Link from "next/link"
 import { useState } from "react"
@@ -11,40 +12,51 @@ export default function AdminLoginPage() {
   const [error, setError] = useState('')
   const [showPassword, setShowPassword] = useState(false)
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    
-    if (!password.trim()) {
-      setError('Password is required')
-      return
-    }
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault()
+  
+  if (!password.trim()) {
+    setError('Password is required')
+    return
+  }
 
-    setIsLoading(true)
-    setError('')
-    
-    try {
-      const response = await fetch('/api/admin/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ password }),
-      })
+  setIsLoading(true)
+  setError('')
+  
+  try {
+    const response = await fetch('/api/admin/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ password }),
+    })
 
-      if (response.ok) {
-        // Redirect to admin dashboard
-        window.location.href = '/admin/emails'
+    if (response.ok) {
+      // Track successful admin login
+      analytics.adminLogin();
+      
+      // Redirect to admin dashboard
+      window.location.href = '/admin/emails'
+    } else {
+      const data = await response.json()
+      
+      // Handle different error types
+      if (response.status === 429) {
+        // Rate limited
+        setError(data.error || 'Too many login attempts. Please try again later.')
       } else {
-        const data = await response.json()
+        // Invalid password or other errors
         setError(data.error || 'Invalid password')
       }
-    } catch (error) {
-      console.error('Login error:', error)
-      setError('Network error. Please try again.')
-    } finally {
-      setIsLoading(false)
     }
+  } catch (error) {
+    console.error('Login error:', error)
+    setError('Network error. Please try again.')
+  } finally {
+    setIsLoading(false)
   }
+}
 
   return (
     <div className="min-h-screen flex flex-col relative overflow-hidden">

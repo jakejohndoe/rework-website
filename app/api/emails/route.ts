@@ -1,6 +1,7 @@
-// app/api/emails/route.ts
+// app/api/emails/route.ts - Updated with Rate Limiting
 import { NextRequest, NextResponse } from 'next/server';
 import { getDatabase } from '@/lib/mongodb';
+import { checkRateLimit, getClientIP, shouldBypassRateLimit, RATE_LIMITS } from '@/lib/rateLimiter';
 
 interface EmailSubmission {
   email: string;
@@ -14,6 +15,40 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { email, source = 'unknown' } = body;
 
+    // Get client IP for rate limiting
+    const clientIP = getClientIP(request);
+
+    // Check rate limit (unless it's a bypass IP like localhost)
+    if (!shouldBypassRateLimit(clientIP)) {
+      const rateLimitResult = checkRateLimit(
+        `email_signup_${clientIP}`,
+        RATE_LIMITS.EMAIL_SIGNUP.maxRequests,
+        RATE_LIMITS.EMAIL_SIGNUP.windowMs
+      );
+
+      if (!rateLimitResult.allowed) {
+        return NextResponse.json(
+          { 
+            error: rateLimitResult.error,
+            retryAfter: Math.ceil((rateLimitResult.resetTime - Date.now()) / 1000)
+          },
+          { 
+            status: 429,
+            headers: {
+              'Retry-After': Math.ceil((rateLimitResult.resetTime - Date.now()) / 1000).toString()
+            }
+          }
+        );
+      }
+
+      // Add rate limit info to response headers (for debugging)
+      const headers = {
+        'X-RateLimit-Limit': RATE_LIMITS.EMAIL_SIGNUP.maxRequests.toString(),
+        'X-RateLimit-Remaining': rateLimitResult.remainingRequests.toString(),
+        'X-RateLimit-Reset': new Date(rateLimitResult.resetTime).toISOString()
+      };
+    }
+
     // Basic email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email || !emailRegex.test(email)) {
@@ -23,7 +58,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Get database connection (this will trigger the MongoDB connection!)
+    // Get database connection
     const db = await getDatabase();
     const collection = db.collection('email_signups');
 
@@ -41,18 +76,35 @@ export async function POST(request: NextRequest) {
       email: email.toLowerCase().trim(),
       source,
       timestamp: new Date(),
-      ipAddress: request.ip || request.headers.get('x-forwarded-for') || 'unknown'
+      ipAddress: clientIP
     };
 
     // Insert email into database
     const result = await collection.insertOne(emailDoc);
 
     if (result.acknowledged) {
-      return NextResponse.json({
+      // Success response with rate limit headers
+      const response = NextResponse.json({
         success: true,
         message: 'Email successfully added to waitlist',
         id: result.insertedId
       });
+
+      // Add rate limit headers to successful responses too
+      if (!shouldBypassRateLimit(clientIP)) {
+        // Get updated rate limit info
+        const currentLimit = checkRateLimit(
+          `email_signup_${clientIP}`,
+          RATE_LIMITS.EMAIL_SIGNUP.maxRequests,
+          RATE_LIMITS.EMAIL_SIGNUP.windowMs
+        );
+        
+        response.headers.set('X-RateLimit-Limit', RATE_LIMITS.EMAIL_SIGNUP.maxRequests.toString());
+        response.headers.set('X-RateLimit-Remaining', (currentLimit.remainingRequests - 1).toString());
+        response.headers.set('X-RateLimit-Reset', new Date(currentLimit.resetTime).toISOString());
+      }
+
+      return response;
     } else {
       throw new Error('Failed to insert email');
     }

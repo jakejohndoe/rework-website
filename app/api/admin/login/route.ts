@@ -1,10 +1,38 @@
-// app/api/admin/login/route.ts
+// app/api/admin/login/route.ts - Updated with Rate Limiting
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
+import { checkRateLimit, getClientIP, shouldBypassRateLimit, RATE_LIMITS } from '@/lib/rateLimiter';
 
 export async function POST(request: NextRequest) {
   try {
     const { password } = await request.json();
+
+    // Get client IP for rate limiting
+    const clientIP = getClientIP(request);
+
+    // Check rate limit for login attempts (unless it's a bypass IP)
+    if (!shouldBypassRateLimit(clientIP)) {
+      const rateLimitResult = checkRateLimit(
+        `login_attempt_${clientIP}`,
+        RATE_LIMITS.LOGIN_ATTEMPT.maxRequests,
+        RATE_LIMITS.LOGIN_ATTEMPT.windowMs
+      );
+
+      if (!rateLimitResult.allowed) {
+        return NextResponse.json(
+          { 
+            error: rateLimitResult.error,
+            retryAfter: Math.ceil((rateLimitResult.resetTime - Date.now()) / 1000)
+          },
+          { 
+            status: 429,
+            headers: {
+              'Retry-After': Math.ceil((rateLimitResult.resetTime - Date.now()) / 1000).toString()
+            }
+          }
+        );
+      }
+    }
 
     // Check against environment variable
     const adminPassword = process.env.ADMIN_PASSWORD;
@@ -22,7 +50,8 @@ export async function POST(request: NextRequest) {
       const response = NextResponse.json({ success: true });
       
       // Set secure session cookie
-      response.cookies.set('admin-session', 'authenticated', {
+      const cookieStore = await cookies();
+      cookieStore.set('admin-session', 'authenticated', {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'strict',
@@ -32,6 +61,7 @@ export async function POST(request: NextRequest) {
 
       return response;
     } else {
+      // Wrong password - this still counts toward rate limit
       return NextResponse.json(
         { error: 'Invalid password' },
         { status: 401 }
@@ -51,7 +81,8 @@ export async function DELETE() {
   const response = NextResponse.json({ success: true });
   
   // Clear the session cookie
-  response.cookies.set('admin-session', '', {
+  const cookieStore = await cookies();
+  cookieStore.set('admin-session', '', {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'strict',

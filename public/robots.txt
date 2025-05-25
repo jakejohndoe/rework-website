@@ -1,0 +1,25 @@
+User-agent: *
+Allow: /
+
+# Allow important pages
+Allow: /admin/login
+Allow: /api/emails
+
+# Block admin dashboard (keep it private)
+Disallow: /admin/emails
+
+# Allow all major search engines
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot  
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+# Sitemap location
+Sitemap: https://rework.solutions/sitemap.xml
+
+# Crawl delay (be nice to servers)
+Crawl-delay: 1
