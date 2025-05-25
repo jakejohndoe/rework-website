@@ -10,7 +10,7 @@ Job-Specific Tailoring: Customize your resume for each application in seconds
 Multiple Templates: Choose from dozens of professionally designed templates
 ATS Simulation: Test your resume against simulated ATS systems
 Cloud Storage: Securely store all your resume versions
-Content Suggestions: Get smart recommendations to improve your resume's impact
+Content Suggestions: Get smart recommendations to improve your resume's impact()
 
 ### Why ReWork?
 
