@@ -81,16 +81,38 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    site: "@rework.solutions", 
-    creator: "@rework.solutions",
+    site: "@reworkapp", 
+    creator: "@reworkapp",
     title: "ReWork - Smart Tech, For Smarter Jobs",
     description: "Tailor your resume in seconds with AI-powered optimization. Beat ATS systems and get more interviews.",
     images: ["/og-image.png"] // Same as OpenGraph
   },
-  // Simple icons - just the favicon
+  // Enhanced favicon setup matching your actual files
   icons: {
-    icon: '/favicon.ico',
-  }
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: '/favicon-96x96.png', sizes: '96x96', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
+    other: [
+      {
+        rel: 'icon',
+        type: 'image/png',
+        sizes: '192x192',
+        url: '/web-app-manifest-192x192.png',
+      },
+      {
+        rel: 'icon',
+        type: 'image/png', 
+        sizes: '512x512',
+        url: '/web-app-manifest-512x512.png',
+      },
+    ],
+  },
+  manifest: '/site.webmanifest',
 }
 
 export default function RootLayout({
