@@ -1,6 +1,8 @@
 // app/admin/emails/AdminDashboardClient.tsx
 'use client';
 
+import { useState } from 'react';
+
 interface EmailSignup {
   _id: string;
   email: string;
@@ -56,6 +58,10 @@ export default function AdminDashboardClient({ emails }: { emails: EmailSignup[]
     color: source === 'hero' ? '#2CC7D0' : source === 'final-cta' ? '#3A7BF7' : '#8B5CF6'
   }));
 
+  // State for export functionality
+  const [isExporting, setIsExporting] = useState(false);
+  const [exportSuccess, setExportSuccess] = useState(false);
+
   // Logout function
   const handleLogout = async () => {
     try {
@@ -63,6 +69,50 @@ export default function AdminDashboardClient({ emails }: { emails: EmailSignup[]
       window.location.href = '/';
     } catch (error) {
       console.error('Logout error:', error);
+    }
+  };
+
+  // Export function
+  const handleExport = async () => {
+    setIsExporting(true);
+    setExportSuccess(false);
+    
+    try {
+      const response = await fetch('/api/admin/export');
+      
+      if (response.ok) {
+        // Get the CSV content
+        const blob = await response.blob();
+        
+        // Create download link
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        
+        // Get filename from response headers or generate one
+        const contentDisposition = response.headers.get('Content-Disposition');
+        const filename = contentDisposition 
+          ? contentDisposition.split('filename=')[1]?.replace(/"/g, '')
+          : `rework-emails-${new Date().toISOString().split('T')[0]}.csv`;
+        
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+        
+        // Show success feedback
+        setExportSuccess(true);
+        setTimeout(() => setExportSuccess(false), 3000);
+        
+      } else {
+        throw new Error('Export failed');
+      }
+    } catch (error) {
+      console.error('Export error:', error);
+      // Could add error state here
+    } finally {
+      setIsExporting(false);
     }
   };
 
@@ -237,8 +287,48 @@ export default function AdminDashboardClient({ emails }: { emails: EmailSignup[]
                 <div className="flex items-center gap-3">
                   <div className="text-2xl">📧</div>
                   <h3 className="text-2xl font-bold text-white">Recent Signups</h3>
-                  <div className="ml-auto px-4 py-2 bg-[#2CC7D0]/20 text-[#2CC7D0] rounded-full text-sm font-semibold">
-                    {emails.length} total
+                  <div className="ml-auto flex items-center gap-4">
+                    <div className="px-4 py-2 bg-[#2CC7D0]/20 text-[#2CC7D0] rounded-full text-sm font-semibold">
+                      {emails.length} total
+                    </div>
+                    
+                    {/* Export Button */}
+                    <button
+                      onClick={handleExport}
+                      disabled={isExporting || emails.length === 0}
+                      className={`group relative px-4 py-2 bg-gradient-to-r from-[#8B5CF6] to-[#D946EF] text-white text-sm font-semibold rounded-lg transition-all duration-300 shadow-lg flex items-center gap-2 ${
+                        isExporting || emails.length === 0
+                          ? 'opacity-50 cursor-not-allowed'
+                          : 'hover:from-[#D946EF] hover:to-[#F97316] hover:shadow-xl hover:scale-105'
+                      } ${
+                        exportSuccess ? 'from-green-500 to-green-600' : ''
+                      }`}
+                      title={emails.length === 0 ? 'No emails to export' : 'Download CSV file'}
+                    >
+                      {isExporting ? (
+                        <>
+                          <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                          </svg>
+                          <span>Exporting...</span>
+                        </>
+                      ) : exportSuccess ? (
+                        <>
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                          </svg>
+                          <span>Downloaded!</span>
+                        </>
+                      ) : (
+                        <>
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                          </svg>
+                          <span>Export CSV</span>
+                        </>
+                      )}
+                    </button>
                   </div>
                 </div>
               </div>
