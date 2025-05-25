@@ -26,6 +26,23 @@ import { FloatingElements } from "@/components/floating-elements"
 import { AnimatedSection } from "@/components/animated-section"
 import { analytics } from '@/lib/analytics'
 import { getReCaptchaToken } from '@/lib/recaptcha'
+import { useSignupCount } from '@/lib/useSignupCount'
+
+// Signup Counter Component
+function SignupCounter() {
+  const { count, loading, error } = useSignupCount();
+  
+  if (loading || error || count === 0) return null;
+  
+  return (
+    <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/5 border border-white/10 rounded-full backdrop-blur-sm">
+      <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+      <span className="text-xs md:text-sm text-gray-300 font-medium">
+        <span className="text-[#2CC7D0] font-semibold">{count.toLocaleString()}</span> people waiting
+      </span>
+    </div>
+  );
+}
 
 // Simple Mobile Menu Component
 function MobileMenu({ onGetStartedClick }: { onGetStartedClick: () => void }) {
@@ -502,12 +519,13 @@ export default function Home() {
                         </form>
                       )}
                       
-                      {/* Enhanced CTA text - only show when not in success state */}
+                      {/* Enhanced CTA text with signup counter - only show when not in success state */}
                       {!showSuccess && (
-                        <div className="mt-3 md:mt-4 text-center">
+                        <div className="mt-3 md:mt-4 text-center space-y-3">
                           <p className="text-sm md:text-base text-gray-300 font-medium">
                             🚀 Be the first to know when ReWork launches. <span className="text-[#2CC7D0] font-semibold">No spam, ever.</span>
                           </p>
+                          <SignupCounter />
                         </div>
                       )}
                     </div>
@@ -961,7 +979,7 @@ export default function Home() {
                 <Link href="#features" className="text-gray-400 hover:text-white transition-colors duration-300">Features</Link>
                 <Link href="#how-it-works" className="text-gray-400 hover:text-white transition-colors duration-300">How It Works</Link>
                 <Link href="#faq" className="text-gray-400 hover:text-white transition-colors duration-300">FAQ</Link>
-                <Link href="#" className="text-gray-400 hover:text-white transition-colors duration-300">Privacy</Link>
+                <Link href="/privacy" className="text-gray-400 hover:text-white transition-colors duration-300">Privacy</Link>
               </div>
               <div className="flex items-center gap-2 md:gap-3">
                 <div className="text-xs text-gray-500">
