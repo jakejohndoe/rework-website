@@ -1,4 +1,4 @@
-// lib/resend.ts - Email service setup
+// lib/resend.ts - Updated with real unsubscribe link
 import { Resend } from 'resend';
 
 if (!process.env.RESEND_API_KEY) {
@@ -43,6 +43,9 @@ export async function sendWelcomeEmail({ email, source = 'unknown' }: WelcomeEma
 
 // Beautiful modern HTML email template with ReWork branding
 function getWelcomeEmailHTML(email: string, source: string): string {
+  // Create unsubscribe URL with email parameter
+  const unsubscribeUrl = `https://rework.solutions/api/unsubscribe?email=${encodeURIComponent(email)}`;
+  
   return `
     <!DOCTYPE html>
     <html lang="en">
@@ -381,14 +384,14 @@ function getWelcomeEmailHTML(email: string, source: string): string {
             <div class="footer-text">Thanks for believing in the future of job searching!</div>
             
             <div class="social-links">
-              <a href="#">Twitter</a>
-              <a href="#">LinkedIn</a>
-              <a href="#">Blog</a>
+              <a href="https://twitter.com/rework_solutions">Twitter</a>
+              <a href="https://www.linkedin.com/company/rework-solutions">LinkedIn</a>
+              <a href="https://rework.solutions/blog">Blog</a>
             </div>
             
             <div class="unsubscribe">
               You received this email because you signed up for ReWork updates via our ${source} form.<br>
-              <a href="#">Unsubscribe</a> if you no longer want to receive these emails.
+              <a href="${unsubscribeUrl}">Unsubscribe</a> if you no longer want to receive these emails.
             </div>
           </div>
 
@@ -401,6 +404,8 @@ function getWelcomeEmailHTML(email: string, source: string): string {
 
 // Plain text version for email clients that don't support HTML
 function getWelcomeEmailText(email: string, source: string): string {
+  const unsubscribeUrl = `https://rework.solutions/api/unsubscribe?email=${encodeURIComponent(email)}`;
+  
   return `
 REWORK - Smart tech, for smarter jobs
 
@@ -422,8 +427,13 @@ Visit our website: https://rework.solutions
 Thanks for believing in the future of job searching!
 The ReWork Team
 
+Social Links:
+Twitter: https://twitter.com/rework_solutions
+LinkedIn: https://www.linkedin.com/company/rework-solutions
+Blog: https://rework.solutions/blog
+
 ---
 You received this email because you signed up for ReWork updates via our ${source} form.
-Unsubscribe: [link will be added later]
+Unsubscribe: ${unsubscribeUrl}
   `;
 }
