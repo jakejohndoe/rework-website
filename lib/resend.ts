@@ -384,9 +384,8 @@ function getWelcomeEmailHTML(email: string, source: string): string {
             <div class="footer-text">Thanks for believing in the future of job searching!</div>
             
             <div class="social-links">
-              <a href="https://twitter.com/rework_solutions">Twitter</a>
-              <a href="https://www.linkedin.com/company/rework-solutions">LinkedIn</a>
-              <a href="https://rework.solutions/blog">Blog</a>
+              <a href="https://x.com/reworkapp">Twitter</a>
+              <a href="https://www.linkedin.com/in/reworkapp/">LinkedIn</a>
             </div>
             
             <div class="unsubscribe">
@@ -428,9 +427,8 @@ Thanks for believing in the future of job searching!
 The ReWork Team
 
 Social Links:
-Twitter: https://twitter.com/rework_solutions
-LinkedIn: https://www.linkedin.com/company/rework-solutions
-Blog: https://rework.solutions/blog
+Twitter: https://x.com/reworkapp
+LinkedIn: https://www.linkedin.com/in/reworkapp/
 
 ---
 You received this email because you signed up for ReWork updates via our ${source} form.
