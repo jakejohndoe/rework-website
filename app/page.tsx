@@ -956,12 +956,18 @@ export default function Home() {
             
             {/* Left: Logo & Social */}
             <div className="flex flex-col items-center md:flex-row md:items-center gap-4 md:gap-6">
-              <div className="flex items-center gap-2 md:gap-3">
-                <FileText className="h-4 w-4 md:h-5 md:w-5 text-[#2CC7D0]" />
-                <span className="text-base md:text-lg font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">ReWork</span>
-                <span className="text-sm text-gray-400 hidden md:block">•</span>
-                <span className="text-xs md:text-sm text-gray-400 text-center md:text-left">Smart tech for smarter jobs</span>
-              </div>
+            <div className="flex items-center gap-2 md:gap-3">
+              <Image
+                src="/rework-logo-detailed.png"
+                alt="ReWork"
+                width={20}
+                height={20}
+                className="h-8 w-8 md:h-10 md:w-10 object-contain"
+              />
+              <span className="text-base md:text-lg font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">ReWork</span>
+              <span className="text-sm text-gray-400 hidden md:block">•</span>
+              <span className="text-xs md:text-sm text-gray-400 text-center md:text-left">Smart tech for smarter jobs</span>
+            </div>
               
               <div className="flex space-x-3 md:space-x-4">
                 <Link href="https://x.com/reworkapp" target="_blank" className="text-gray-400 hover:text-[#2CC7D0] transition-colors duration-300 hover:scale-110 transform">
