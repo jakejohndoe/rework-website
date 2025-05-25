@@ -960,9 +960,9 @@ export default function Home() {
               <Image
                 src="/rework-logo-detailed.png"
                 alt="ReWork"
-                width={20}
-                height={20}
-                className="h-8 w-8 md:h-10 md:w-10 object-contain"
+                width={40}
+                height={40}
+                className="h-16 w-16 md:h-20 md:w-20 object-contain"
               />
               <span className="text-base md:text-lg font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">ReWork</span>
               <span className="text-sm text-gray-400 hidden md:block">•</span>
