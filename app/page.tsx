@@ -25,6 +25,61 @@ import { CursorEffect } from "@/components/cursor-effect"
 import { FloatingElements } from "@/components/floating-elements"
 import { AnimatedSection } from "@/components/animated-section"
 import { analytics } from '@/lib/analytics'
+import { getReCaptchaToken } from '@/lib/recaptcha'
+
+// Simple Mobile Menu Component
+function MobileMenu({ onGetStartedClick }: { onGetStartedClick: () => void }) {
+  const [isOpen, setIsOpen] = useState(false)
+  
+  return (
+    <>
+      <Button 
+        variant="ghost" 
+        size="icon" 
+        onClick={() => setIsOpen(!isOpen)}
+        className="md:hidden hover:bg-white/10 hover:scale-105 transition-all duration-300 rounded-full group cursor-pointer"
+      >
+        <svg className="h-6 w-6 text-white/80 group-hover:text-white transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          {isOpen ? (
+            <path d="M6 18L18 6M6 6l12 12" />
+          ) : (
+            <>
+              <line x1="4" x2="20" y1="6" y2="6" />
+              <line x1="4" x2="20" y1="12" y2="12" />
+              <line x1="4" x2="20" y1="18" y2="18" />
+            </>
+          )}
+        </svg>
+        <span className="sr-only">Toggle menu</span>
+      </Button>
+      
+      {isOpen && (
+        <div className="fixed inset-0 z-50 md:hidden">
+          <div className="fixed inset-0 bg-black/60" onClick={() => setIsOpen(false)} />
+          <div className="fixed right-0 top-0 h-full w-64 bg-[#0F172A] border-l border-white/10 p-6">
+            <div className="flex flex-col space-y-6 mt-16">
+              <a href="#features" onClick={() => setIsOpen(false)} className="text-white hover:text-[#2CC7D0] transition-colors text-lg font-medium">
+                Features
+              </a>
+              <a href="#how-it-works" onClick={() => setIsOpen(false)} className="text-white hover:text-[#2CC7D0] transition-colors text-lg font-medium">
+                How It Works
+              </a>
+              <a href="#faq" onClick={() => setIsOpen(false)} className="text-white hover:text-[#2CC7D0] transition-colors text-lg font-medium">
+                FAQ
+              </a>
+              <button 
+                onClick={() => { setIsOpen(false); onGetStartedClick(); }}
+                className="mt-6 px-4 py-3 bg-gradient-to-r from-[#2CC7D0] to-[#3A7BF7] text-white rounded-lg text-left font-semibold"
+              >
+                Get Started
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  )
+}
 
 export default function Home() {
   const [highlightEmail, setHighlightEmail] = useState(false)
@@ -39,8 +94,8 @@ export default function Home() {
   const [showSuccessBottom, setShowSuccessBottom] = useState(false)
   const [emailErrorBottom, setEmailErrorBottom] = useState('')
 
-  const handleGetStartedClick = (e: React.MouseEvent) => {
-    e.preventDefault()
+  const handleGetStartedClick = (e?: React.MouseEvent) => {
+    e?.preventDefault()
     
     // Track CTA button click
     analytics.ctaButtonClick('navbar_get_started');
@@ -129,6 +184,9 @@ export default function Home() {
     setEmailError('') // Clear any existing errors
     
     try {
+      // 🆕 GET RECAPTCHA TOKEN
+      const recaptchaToken = await getReCaptchaToken('email_signup')
+      
       const response = await fetch('/api/emails', {
         method: 'POST',
         headers: {
@@ -136,7 +194,8 @@ export default function Home() {
         },
         body: JSON.stringify({
           email: emailValue.trim(),
-          source: 'hero' // Track this as hero form submission
+          source: 'hero', // Track this as hero form submission
+          recaptchaToken // 🆕 INCLUDE TOKEN
         }),
       })
 
@@ -202,6 +261,9 @@ export default function Home() {
     setEmailErrorBottom('') // Clear any existing errors
     
     try {
+      // 🆕 GET RECAPTCHA TOKEN
+      const recaptchaToken = await getReCaptchaToken('email_signup')
+      
       const response = await fetch('/api/emails', {
         method: 'POST',
         headers: {
@@ -209,7 +271,8 @@ export default function Home() {
         },
         body: JSON.stringify({
           email: emailValueBottom.trim(),
-          source: 'final-cta' // Track this as final CTA form submission
+          source: 'final-cta', // Track this as final CTA form submission
+          recaptchaToken // 🆕 INCLUDE TOKEN
         }),
       })
 
@@ -263,18 +326,18 @@ export default function Home() {
         {/* Glassmorphism background with subtle gradient */}
         <div className="absolute inset-0 bg-gradient-to-r from-[#0F172A]/95 via-[#1E293B]/90 to-[#0F172A]/95" />
         
-        {/* Subtle ambient particles in navbar */}
-        <div className="absolute top-2 left-20 w-8 h-8 bg-[#2CC7D0]/20 rounded-full blur-sm" />
-        <div className="absolute bottom-2 right-32 w-6 h-6 bg-[#3A7BF7]/15 rounded-full blur-sm" />
+        {/* Subtle ambient particles in navbar - hide on small screens */}
+        <div className="hidden md:block absolute top-2 left-20 w-8 h-8 bg-[#2CC7D0]/20 rounded-full blur-sm" />
+        <div className="hidden md:block absolute bottom-2 right-32 w-6 h-6 bg-[#3A7BF7]/15 rounded-full blur-sm" />
         
         <div className="container relative flex h-16 items-center justify-between px-4 md:px-6 z-10">
           <div className="flex items-center gap-2">
             <Link href="#top" className="flex items-center gap-2 hover:opacity-90 transition-all duration-300 group cursor-pointer">
               <div className="relative">
-                <FileText className="h-6 w-6 text-[#2CC7D0] group-hover:scale-110 group-hover:text-[#3A7BF7] transition-all duration-300" />
+                <FileText className="h-5 w-5 md:h-6 md:w-6 text-[#2CC7D0] group-hover:scale-110 group-hover:text-[#3A7BF7] transition-all duration-300" />
                 <div className="absolute inset-0 bg-[#2CC7D0]/30 rounded-full blur-md group-hover:blur-lg group-hover:bg-[#3A7BF7]/30 transition-all duration-300" />
               </div>
-              <span className="text-xl font-bold bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent group-hover:from-[#2CC7D0] group-hover:via-white group-hover:to-[#3A7BF7] transition-all duration-300">
+              <span className="text-lg md:text-xl font-bold bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent group-hover:from-[#2CC7D0] group-hover:via-white group-hover:to-[#3A7BF7] transition-all duration-300">
                 ReWork
               </span>
             </Link>
@@ -324,40 +387,34 @@ export default function Home() {
               Get Started
             </button>
             
-            <Button variant="ghost" size="icon" className="md:hidden hover:bg-white/10 hover:scale-105 transition-all duration-300 rounded-full group cursor-pointer">
-              <svg className="h-6 w-6 text-white/80 group-hover:text-white transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <line x1="4" x2="20" y1="12" y2="12" />
-                <line x1="4" x2="20" y1="6" y2="6" />
-                <line x1="4" x2="20" y1="18" y2="18" />
-              </svg>
-              <span className="sr-only">Toggle menu</span>
-            </Button>
+            {/* Mobile Menu */}
+            <MobileMenu onGetStartedClick={handleGetStartedClick} />
           </div>
         </div>
       </header>
 
       <main className="flex-1">
         {/* Hero Section */}
-        <section id="top" className="relative w-full pt-8 pb-20 md:pt-12 md:pb-32 lg:pt-16 lg:pb-40 overflow-hidden">
+        <section id="top" className="relative w-full pt-6 pb-16 md:pt-8 md:pb-20 lg:pt-12 lg:pb-32 xl:pt-16 xl:pb-40 overflow-hidden">
           {/* Enhanced gradient background for better depth */}
           <div className="absolute inset-0 bg-gradient-to-br from-[#0A0F1C] via-[#0F172A] via-[#1E293B] to-[#0F172A] animate-gradient-x" />
           <div className="absolute inset-0 bg-gradient-to-b from-[#0A0F1C]/80 via-transparent to-[#1E293B]/60" />
           
-          {/* Cool background orbs are back! */}
-          <div className="absolute top-20 left-10 w-72 h-72 bg-[#2CC7D0]/10 rounded-full blur-3xl animate-pulse" />
-          <div className="absolute bottom-20 right-10 w-96 h-96 bg-[#3A7BF7]/10 rounded-full blur-3xl animate-pulse delay-1000" />
+          {/* Cool background orbs - responsive sizing */}
+          <div className="absolute top-16 md:top-20 left-6 md:left-10 w-48 h-48 md:w-72 md:h-72 bg-[#2CC7D0]/10 rounded-full blur-3xl animate-pulse" />
+          <div className="absolute bottom-12 md:bottom-20 right-6 md:right-10 w-64 h-64 md:w-96 md:h-96 bg-[#3A7BF7]/10 rounded-full blur-3xl animate-pulse delay-1000" />
           
           <div className="container relative px-4 md:px-6 z-10">
             <AnimatedSection>
-              <div className="grid gap-8 lg:grid-cols-2 lg:gap-16 items-start lg:items-center">
-                <div className="flex flex-col justify-center space-y-8">
-                  <div className="space-y-6">
-                    <div className="inline-flex items-center px-4 py-2 rounded-full bg-gradient-to-r from-[#2CC7D0]/10 to-[#3A7BF7]/10 border border-[#2CC7D0]/20 backdrop-blur-sm">
-                      <Sparkles className="h-4 w-4 text-[#2CC7D0] mr-2" />
-                      <span className="text-sm font-medium text-white">AI-Powered Resume Optimization</span>
+              <div className="grid gap-6 md:gap-8 lg:grid-cols-2 lg:gap-16 items-start lg:items-center">
+                <div className="flex flex-col justify-center space-y-6 md:space-y-8">
+                  <div className="space-y-4 md:space-y-6">
+                    <div className="inline-flex items-center px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-gradient-to-r from-[#2CC7D0]/10 to-[#3A7BF7]/10 border border-[#2CC7D0]/20 backdrop-blur-sm">
+                      <Sparkles className="h-3 w-3 md:h-4 md:w-4 text-[#2CC7D0] mr-2" />
+                      <span className="text-xs md:text-sm font-medium text-white">AI-Powered Resume Optimization</span>
                     </div>
                     
-                    <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl md:text-6xl lg:text-7xl">
+                    <h1 className="text-3xl font-bold tracking-tight text-white sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl">
                       Tailor Your Resume in{" "}
                       <span className="relative bg-gradient-to-r from-[#2CC7D0] via-[#3A7BF7] to-[#8B5CF6] bg-clip-text text-transparent animate-gradient-x">
                         <span className="absolute inset-0 bg-gradient-to-r from-[#2CC7D0] via-[#3A7BF7] to-[#8B5CF6] blur-2xl opacity-30"></span>
@@ -365,40 +422,40 @@ export default function Home() {
                       </span>
                     </h1>
                     
-                    <p className="max-w-[600px] text-xl text-gray-300 leading-relaxed">
+                    <p className="max-w-[600px] text-base md:text-xl text-gray-300 leading-relaxed">
                       AI-powered resume optimization for job-specific applications. Get more interviews with a resume that
                       stands out from the crowd.
                     </p>
                   </div>
                   
-                  {/* Enhanced Email Capture Form with all the bells and whistles */}
-                  <div className="mt-8">
-                    <div className={`relative p-6 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl transition-all duration-500 ${
+                  {/* Enhanced Email Capture Form - responsive padding and sizing */}
+                  <div className="mt-6 md:mt-8">
+                    <div className={`relative p-4 md:p-6 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl transition-all duration-500 ${
                       highlightEmail ? 'ring-4 ring-[#2CC7D0] ring-opacity-50 shadow-[0_0_30px_rgba(44,199,208,0.3)] scale-105' : ''
                     } ${showSuccess ? 'ring-4 ring-green-500 ring-opacity-50 shadow-[0_0_30px_rgba(34,197,94,0.3)]' : ''}`}>
                       
                       {showSuccess ? (
                         // Success State
                         <div className="text-center py-4">
-                          <div className="inline-flex items-center justify-center w-16 h-16 bg-green-500 rounded-full mb-4 animate-bounce">
-                            <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <div className="inline-flex items-center justify-center w-12 h-12 md:w-16 md:h-16 bg-green-500 rounded-full mb-4 animate-bounce">
+                            <svg className="w-6 h-6 md:w-8 md:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                             </svg>
                           </div>
-                          <h3 className="text-xl font-bold text-white mb-2">You're on the list! 🎉</h3>
-                          <p className="text-gray-300">Thanks for joining our waitlist. We'll notify you as soon as ReWork launches!</p>
+                          <h3 className="text-lg md:text-xl font-bold text-white mb-2">You're on the list! 🎉</h3>
+                          <p className="text-sm md:text-base text-gray-300">Thanks for joining our waitlist. We'll notify you as soon as ReWork launches!</p>
                         </div>
                       ) : (
                         // Form State
                         <form onSubmit={handleSubmit}>
-                          <div className="flex flex-col sm:flex-row gap-4">
+                          <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
                             <div className="relative flex-1">
                               <input
                                 type="email"
                                 placeholder="Enter your email"
                                 value={emailValue}
                                 onChange={handleEmailChange}
-                                className={`w-full px-6 py-4 bg-white/10 border rounded-xl text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:border-transparent transition-all duration-300 text-lg backdrop-blur-sm ${
+                                className={`w-full px-4 md:px-6 py-3 md:py-4 bg-white/10 border rounded-xl text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:border-transparent transition-all duration-300 text-base md:text-lg backdrop-blur-sm ${
                                   highlightEmail ? 'ring-2 ring-[#2CC7D0] bg-white/15' : ''
                                 } ${
                                   emailError ? 'border-red-500 focus:ring-red-500' : 'border-white/20 focus:ring-[#2CC7D0]'
@@ -406,8 +463,8 @@ export default function Home() {
                                 disabled={isSubmitting}
                               />
                               {emailError && (
-                                <div className="absolute -bottom-6 left-0 text-red-400 text-sm flex items-center gap-1">
-                                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <div className="absolute -bottom-5 md:-bottom-6 left-0 text-red-400 text-xs md:text-sm flex items-center gap-1">
+                                  <svg className="w-3 h-3 md:w-4 md:h-4" fill="currentColor" viewBox="0 0 20 20">
                                     <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
                                   </svg>
                                   {emailError}
@@ -417,7 +474,7 @@ export default function Home() {
                             <button 
                               type="submit"
                               disabled={isSubmitting || !!emailError}
-                              className={`px-8 py-4 bg-gradient-to-r from-[#2CC7D0] to-[#3A7BF7] text-white font-semibold rounded-xl transition-all duration-300 shadow-lg text-lg flex items-center gap-2 min-w-[160px] justify-center ${
+                              className={`px-6 md:px-8 py-3 md:py-4 bg-gradient-to-r from-[#2CC7D0] to-[#3A7BF7] text-white font-semibold rounded-xl transition-all duration-300 shadow-lg text-base md:text-lg flex items-center gap-2 min-w-[140px] md:min-w-[160px] justify-center ${
                                 isSubmitting || emailError 
                                   ? 'opacity-50 cursor-not-allowed' 
                                   : 'hover:from-[#3A7BF7] hover:to-[#8B5CF6] hover:shadow-xl hover:scale-105'
@@ -425,15 +482,16 @@ export default function Home() {
                             >
                               {isSubmitting ? (
                                 <>
-                                  <svg className="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
+                                  <svg className="animate-spin w-4 h-4 md:w-5 md:h-5" fill="none" viewBox="0 0 24 24">
                                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                   </svg>
-                                  Joining...
+                                  <span className="hidden sm:inline">Joining...</span>
+                                  <span className="sm:hidden">...</span>
                                 </>
                               ) : (
                                 <>
-                                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                                   </svg>
                                   Get Notified
@@ -446,8 +504,8 @@ export default function Home() {
                       
                       {/* Enhanced CTA text - only show when not in success state */}
                       {!showSuccess && (
-                        <div className="mt-4 text-center">
-                          <p className="text-base text-gray-300 font-medium">
+                        <div className="mt-3 md:mt-4 text-center">
+                          <p className="text-sm md:text-base text-gray-300 font-medium">
                             🚀 Be the first to know when ReWork launches. <span className="text-[#2CC7D0] font-semibold">No spam, ever.</span>
                           </p>
                         </div>
@@ -455,49 +513,50 @@ export default function Home() {
                     </div>
                   </div>
                   
-                  {/* Enhanced feature checkmarks */}
-                  <div className="flex items-center justify-center space-x-8 text-sm mt-8">
-                    <div className="flex items-center space-x-3">
-                      <div className="flex items-center justify-center w-6 h-6 bg-gradient-to-r from-[#22C55E] to-[#16A34A] rounded-full">
-                        <CheckCircle className="w-4 h-4 text-white" />
+                  {/* Enhanced feature checkmarks - responsive layout */}
+                  <div className="flex flex-col sm:flex-row items-center justify-center space-y-3 sm:space-y-0 sm:space-x-6 md:space-x-8 text-xs md:text-sm mt-6 md:mt-8">
+                    <div className="flex items-center space-x-2 md:space-x-3">
+                      <div className="flex items-center justify-center w-5 h-5 md:w-6 md:h-6 bg-gradient-to-r from-[#22C55E] to-[#16A34A] rounded-full">
+                        <CheckCircle className="w-3 h-3 md:w-4 md:h-4 text-white" />
                       </div>
                       <span className="text-gray-300 font-medium">ATS-Optimized</span>
                     </div>
-                    <div className="flex items-center space-x-3">
-                      <div className="flex items-center justify-center w-6 h-6 bg-gradient-to-r from-[#22C55E] to-[#16A34A] rounded-full">
-                        <CheckCircle className="w-4 h-4 text-white" />
+                    <div className="flex items-center space-x-2 md:space-x-3">
+                      <div className="flex items-center justify-center w-5 h-5 md:w-6 md:h-6 bg-gradient-to-r from-[#22C55E] to-[#16A34A] rounded-full">
+                        <CheckCircle className="w-3 h-3 md:w-4 md:h-4 text-white" />
                       </div>
                       <span className="text-gray-300 font-medium">Job-Specific</span>
                     </div>
-                    <div className="flex items-center space-x-3">
-                      <div className="flex items-center justify-center w-6 h-6 bg-gradient-to-r from-[#22C55E] to-[#16A34A] rounded-full">
-                        <CheckCircle className="w-4 h-4 text-white" />
+                    <div className="flex items-center space-x-2 md:space-x-3">
+                      <div className="flex items-center justify-center w-5 h-5 md:w-6 md:h-6 bg-gradient-to-r from-[#22C55E] to-[#16A34A] rounded-full">
+                        <CheckCircle className="w-3 h-3 md:w-4 md:h-4 text-white" />
                       </div>
                       <span className="text-gray-300 font-medium">AI-Powered</span>
                     </div>
                   </div>
                 </div>
                 
-                <div className="flex items-start justify-center lg:items-start lg:justify-center lg:-mt-32">
+                {/* Logo section - responsive sizing */}
+                <div className="flex items-start justify-center lg:items-start lg:justify-center lg:-mt-16 xl:-mt-32">
                   <div className="relative group">
-                    {/* Perfect balance glow */}
-                    <div className="absolute -inset-20 bg-gradient-to-r from-[#2CC7D0] to-[#3A7BF7] rounded-full blur-3xl opacity-10 group-hover:opacity-15 transition-opacity duration-1000" />
+                    {/* Perfect balance glow - responsive sizing */}
+                    <div className="absolute -inset-10 md:-inset-20 bg-gradient-to-r from-[#2CC7D0] to-[#3A7BF7] rounded-full blur-3xl opacity-10 group-hover:opacity-15 transition-opacity duration-1000" />
                     
                     <div className="relative flex flex-col items-center justify-center">
-                      <div className="h-[650px] w-[650px] lg:h-[720px] lg:w-[720px] flex items-center justify-center">
+                      <div className="h-[400px] w-[400px] md:h-[550px] md:w-[550px] lg:h-[650px] lg:w-[650px] xl:h-[720px] xl:w-[720px] flex items-center justify-center">
                         <Image
                           src="/rework-logo-detailed.png"
                           alt="ReWork AI Resume Optimization"
                           width={610}
                           height={610}
-                          className="object-contain drop-shadow-2xl group-hover:scale-105 transition-all duration-1000 lg:w-[680px] lg:h-[680px] animate-gentle-float"
+                          className="object-contain drop-shadow-2xl group-hover:scale-105 transition-all duration-1000 w-[380px] h-[380px] md:w-[520px] md:h-[520px] lg:w-[610px] lg:h-[610px] xl:w-[680px] xl:h-[680px] animate-gentle-float"
                           priority
                         />
                       </div>
                       
-                      {/* Slogan right under logo - no gap */}
-                      <div className="text-center -mt-32 lg:-mt-36">
-                        <p className="text-lg lg:text-xl font-bold bg-gradient-to-r from-[#2CC7D0] to-[#3A7BF7] bg-clip-text text-transparent tracking-tight">
+                      {/* Slogan - responsive positioning */}
+                      <div className="text-center -mt-20 md:-mt-28 lg:-mt-32 xl:-mt-36">
+                        <p className="text-base md:text-lg lg:text-xl font-bold bg-gradient-to-r from-[#2CC7D0] to-[#3A7BF7] bg-clip-text text-transparent tracking-tight">
                           Smart tech, for smarter jobs.
                         </p>
                       </div>
@@ -509,33 +568,33 @@ export default function Home() {
           </div>
         </section>
 
-        {/* How It Works */}
-        <section id="how-it-works" className="relative w-full py-20 md:py-32 overflow-hidden">
+        {/* How It Works - responsive spacing */}
+        <section id="how-it-works" className="relative w-full py-12 md:py-20 lg:py-32 overflow-hidden">
           <FloatingElements />
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/5 to-transparent" />
           
-          {/* Subtle ambient orbs */}
-          <div className="absolute top-32 right-20 w-64 h-64 bg-[#3A7BF7]/8 rounded-full blur-3xl" />
-          <div className="absolute bottom-16 left-16 w-80 h-80 bg-[#8B5CF6]/6 rounded-full blur-3xl" />
+          {/* Subtle ambient orbs - hide on small screens */}
+          <div className="hidden md:block absolute top-32 right-20 w-64 h-64 bg-[#3A7BF7]/8 rounded-full blur-3xl" />
+          <div className="hidden md:block absolute bottom-16 left-16 w-80 h-80 bg-[#8B5CF6]/6 rounded-full blur-3xl" />
           
           <div className="container relative px-4 md:px-6 z-10">
             <AnimatedSection>
-              <div className="flex flex-col items-center justify-center space-y-4 text-center mb-16">
+              <div className="flex flex-col items-center justify-center space-y-4 text-center mb-8 md:mb-16">
                 <div className="space-y-4">
-                  <h2 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl md:text-6xl">
+                  <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl md:text-5xl lg:text-6xl">
                     How It{" "}
                     <span className="bg-gradient-to-r from-[#2CC7D0] to-[#3A7BF7] bg-clip-text text-transparent">
                       Works
                     </span>
                   </h2>
-                  <p className="max-w-[800px] text-xl text-muted-foreground">
+                  <p className="max-w-[800px] text-lg md:text-xl text-muted-foreground px-4">
                     Three simple steps to create a tailored resume that gets you noticed
                   </p>
                 </div>
               </div>
             </AnimatedSection>
             
-            <div className="mx-auto mt-16 grid max-w-6xl grid-cols-1 gap-12 md:grid-cols-3 md:items-stretch">
+            <div className="mx-auto mt-8 md:mt-16 grid max-w-6xl grid-cols-1 gap-8 md:gap-12 md:grid-cols-3 md:items-stretch">
               {[
                 {
                   icon: Upload,
@@ -565,15 +624,15 @@ export default function Home() {
                          style={{background: `linear-gradient(to right, ${step.color.split(' ')[1]}, ${step.color.split(' ')[3]})`}} />
                     <Card className="relative h-full border-0 bg-card backdrop-blur-xl shadow-xl hover:shadow-2xl transition-all duration-500 group-hover:scale-105 flex flex-col min-h-[280px]">
                       <CardHeader className="text-center pb-4 flex-shrink-0">
-                        <div className={`mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-r ${step.color} shadow-lg`}>
-                          <step.icon className="h-10 w-10 text-white" />
+                        <div className={`mx-auto mb-4 flex h-16 w-16 md:h-20 md:w-20 items-center justify-center rounded-2xl bg-gradient-to-r ${step.color} shadow-lg`}>
+                          <step.icon className="h-8 w-8 md:h-10 md:w-10 text-white" />
                         </div>
-                        <CardTitle className="text-2xl font-bold text-card-foreground">
+                        <CardTitle className="text-xl md:text-2xl font-bold text-card-foreground">
                           {step.title}
                         </CardTitle>
                       </CardHeader>
-                      <CardContent className="flex-grow flex items-center justify-center px-6">
-                        <CardDescription className="text-center text-muted-foreground text-lg leading-relaxed">
+                      <CardContent className="flex-grow flex items-center justify-center px-4 md:px-6">
+                        <CardDescription className="text-center text-muted-foreground text-base md:text-lg leading-relaxed">
                           {step.description}
                         </CardDescription>
                       </CardContent>
@@ -585,34 +644,34 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Key Features */}
-        <section id="features" className="relative w-full py-20 md:py-32 overflow-hidden">
+        {/* Key Features - responsive spacing and grid */}
+        <section id="features" className="relative w-full py-12 md:py-20 lg:py-32 overflow-hidden">
           <FloatingElements />
           <div className="absolute inset-0 bg-gradient-to-b from-gray-800 to-gray-900" />
           
-          {/* Very subtle ambient orbs */}
-          <div className="absolute top-20 left-32 w-72 h-72 bg-[#2CC7D0]/6 rounded-full blur-3xl" />
-          <div className="absolute bottom-32 right-24 w-60 h-60 bg-[#D946EF]/5 rounded-full blur-3xl" />
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-[#3A7BF7]/4 rounded-full blur-3xl" />
+          {/* Very subtle ambient orbs - hide on small screens */}
+          <div className="hidden md:block absolute top-20 left-32 w-72 h-72 bg-[#2CC7D0]/6 rounded-full blur-3xl" />
+          <div className="hidden md:block absolute bottom-32 right-24 w-60 h-60 bg-[#D946EF]/5 rounded-full blur-3xl" />
+          <div className="hidden md:block absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-[#3A7BF7]/4 rounded-full blur-3xl" />
           
           <div className="container relative px-4 md:px-6 z-10">
             <AnimatedSection>
-              <div className="flex flex-col items-center justify-center space-y-4 text-center mb-16">
+              <div className="flex flex-col items-center justify-center space-y-4 text-center mb-8 md:mb-16">
                 <div className="space-y-4">
-                  <h2 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl md:text-6xl">
+                  <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl md:text-5xl lg:text-6xl">
                     Key{" "}
                     <span className="bg-gradient-to-r from-[#2CC7D0] to-[#3A7BF7] bg-clip-text text-transparent">
                       Features
                     </span>
                   </h2>
-                  <p className="max-w-[800px] text-xl text-muted-foreground">
+                  <p className="max-w-[800px] text-lg md:text-xl text-muted-foreground px-4">
                     Powerful tools to help you land your dream job
                   </p>
                 </div>
               </div>
             </AnimatedSection>
             
-            <div className="mx-auto mt-16 grid max-w-7xl grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="mx-auto mt-8 md:mt-16 grid max-w-7xl grid-cols-1 gap-6 md:gap-8 sm:grid-cols-2 lg:grid-cols-3">
               {[
                 {
                   icon: Sparkles,
@@ -662,16 +721,16 @@ export default function Home() {
                     <div className="absolute -inset-1 bg-gradient-to-r opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl blur-lg"
                          style={{background: `linear-gradient(to right, ${feature.color.split(' ')[1]}, ${feature.color.split(' ')[3]})`}} />
                     <Card className="relative h-full border-0 bg-card backdrop-blur-xl shadow-lg hover:shadow-xl transition-all duration-500 group-hover:scale-105">
-                      <CardHeader>
-                        <div className={`mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-r ${feature.color} shadow-lg`}>
-                          <feature.icon className="h-7 w-7 text-white" />
+                      <CardHeader className="p-4 md:p-6">
+                        <div className={`mb-3 md:mb-4 flex h-12 w-12 md:h-14 md:w-14 items-center justify-center rounded-xl bg-gradient-to-r ${feature.color} shadow-lg`}>
+                          <feature.icon className="h-6 w-6 md:h-7 md:w-7 text-white" />
                         </div>
-                        <CardTitle className="text-xl font-bold text-card-foreground">
+                        <CardTitle className="text-lg md:text-xl font-bold text-card-foreground">
                           {feature.title}
                         </CardTitle>
                       </CardHeader>
-                      <CardContent>
-                        <CardDescription className="text-muted-foreground leading-relaxed">
+                      <CardContent className="p-4 md:p-6 pt-0">
+                        <CardDescription className="text-muted-foreground leading-relaxed text-sm md:text-base">
                           {feature.description}
                         </CardDescription>
                       </CardContent>
@@ -683,33 +742,32 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Enhanced FAQ Section - matching How It Works background */}
-        <section id="faq" className="relative w-full py-20 md:py-32 overflow-hidden">
-          {/* Simple dark background like How It Works */}
+        {/* Enhanced FAQ Section - responsive spacing */}
+        <section id="faq" className="relative w-full py-12 md:py-20 lg:py-32 overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/5 to-transparent" />
           
-          {/* Ambient orbs for atmosphere */}
-          <div className="absolute top-40 right-32 w-56 h-56 bg-[#8B5CF6]/5 rounded-full blur-3xl" />
-          <div className="absolute bottom-20 left-20 w-48 h-48 bg-[#2CC7D0]/4 rounded-full blur-3xl" />
+          {/* Ambient orbs - hide on small screens */}
+          <div className="hidden md:block absolute top-40 right-32 w-56 h-56 bg-[#8B5CF6]/5 rounded-full blur-3xl" />
+          <div className="hidden md:block absolute bottom-20 left-20 w-48 h-48 bg-[#2CC7D0]/4 rounded-full blur-3xl" />
           
           <div className="container px-4 md:px-6 relative z-10">
             <AnimatedSection>
-              <div className="flex flex-col items-center justify-center space-y-4 text-center mb-16">
+              <div className="flex flex-col items-center justify-center space-y-4 text-center mb-8 md:mb-16">
                 <div className="space-y-4">
-                  <h2 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl md:text-6xl">
+                  <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl md:text-5xl lg:text-6xl">
                     Frequently Asked{" "}
                     <span className="bg-gradient-to-r from-[#2CC7D0] to-[#3A7BF7] bg-clip-text text-transparent">
                       Questions
                     </span>
                   </h2>
-                  <p className="max-w-[800px] text-xl text-muted-foreground">
+                  <p className="max-w-[800px] text-lg md:text-xl text-muted-foreground px-4">
                     Everything you need to know about ReWork
                   </p>
                 </div>
               </div>
             </AnimatedSection>
             
-            <div className="mx-auto mt-16 max-w-4xl">
+            <div className="mx-auto mt-8 md:mt-16 max-w-4xl">
               <AnimatedSection delay={0.2}>
                 <Accordion type="single" collapsible className="w-full space-y-4">
                   {[
@@ -731,16 +789,15 @@ export default function Home() {
                     }
                   ].map((item, index) => (
                     <AccordionItem key={index} value={`item-${index + 1}`} className="group relative">
-                      {/* Glassmorphism background with hover glow */}
                       <div className="absolute -inset-1 bg-gradient-to-r from-[#2CC7D0]/0 via-[#3A7BF7]/0 to-[#8B5CF6]/0 group-hover:from-[#2CC7D0]/20 group-hover:via-[#3A7BF7]/20 group-hover:to-[#8B5CF6]/20 rounded-xl blur-sm transition-all duration-500 opacity-0 group-hover:opacity-100" />
                       <div className="relative bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl hover:bg-white/8 hover:border-white/15 transition-all duration-300 shadow-lg hover:shadow-xl">
-                        <AccordionTrigger className="text-left text-white px-6 py-5 hover:no-underline group-hover:text-white transition-colors duration-300 text-lg font-semibold">
+                        <AccordionTrigger className="text-left text-white px-4 md:px-6 py-4 md:py-5 hover:no-underline group-hover:text-white transition-colors duration-300 text-base md:text-lg font-semibold">
                           <span className="flex items-center gap-3">
                             <div className="w-2 h-2 bg-gradient-to-r from-[#2CC7D0] to-[#3A7BF7] rounded-full group-hover:scale-125 transition-transform duration-300" />
                             {item.question}
                           </span>
                         </AccordionTrigger>
-                        <AccordionContent className="text-gray-300 px-6 pb-6 text-base leading-relaxed">
+                        <AccordionContent className="text-gray-300 px-4 md:px-6 pb-4 md:pb-6 text-sm md:text-base leading-relaxed">
                           <div className="pl-5 border-l-2 border-gradient-to-b from-[#2CC7D0]/30 to-[#3A7BF7]/30 ml-2">
                             {item.answer}
                           </div>
@@ -754,65 +811,64 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Final CTA */}
-        <section className="relative w-full py-20 md:py-32 overflow-hidden">
-          {/* Enhanced gradient background matching hero */}
+        {/* Final CTA - responsive spacing */}
+        <section className="relative w-full py-12 md:py-20 lg:py-32 overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-[#0A0F1C] via-[#0F172A] via-[#1E293B] to-[#0F172A]" />
           <div className="absolute inset-0 bg-gradient-to-b from-[#1E293B]/60 via-transparent to-[#0A0F1C]/80" />
           <FloatingElements />
           
-          {/* More prominent orbs for CTA section */}
-          <div className="absolute top-16 left-16 w-80 h-80 bg-[#2CC7D0]/8 rounded-full blur-3xl" />
-          <div className="absolute bottom-24 right-20 w-72 h-72 bg-[#8B5CF6]/6 rounded-full blur-3xl" />
+          {/* More prominent orbs - hide on small screens */}
+          <div className="hidden md:block absolute top-16 left-16 w-80 h-80 bg-[#2CC7D0]/8 rounded-full blur-3xl" />
+          <div className="hidden md:block absolute bottom-24 right-20 w-72 h-72 bg-[#8B5CF6]/6 rounded-full blur-3xl" />
           
           <div className="container relative px-4 md:px-6 z-10">
             <AnimatedSection>
-              <div className="flex flex-col items-center justify-center space-y-8 text-center text-white">
-                <div className="space-y-6">
-                  <h2 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
+              <div className="flex flex-col items-center justify-center space-y-6 md:space-y-8 text-center text-white">
+                <div className="space-y-4 md:space-y-6">
+                  <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl lg:text-6xl px-4">
                     Ready to Transform Your{" "}
                     <span className="bg-gradient-to-r from-[#2CC7D0] via-[#3A7BF7] to-[#8B5CF6] bg-clip-text text-transparent">
                       Job Search?
                     </span>
                   </h2>
-                  <p className="max-w-[800px] text-xl text-gray-300">
+                  <p className="max-w-[800px] text-lg md:text-xl text-gray-300 px-4">
                     Join our waitlist and be the first to experience AI-powered resume optimization
                   </p>
                 </div>
                 <div className="w-full max-w-lg">
-                  <div className={`relative p-6 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl transition-all duration-500 ${
+                  <div className={`relative p-4 md:p-6 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl transition-all duration-500 ${
                     showSuccessBottom ? 'ring-4 ring-green-500 ring-opacity-50 shadow-[0_0_30px_rgba(34,197,94,0.3)]' : ''
                   }`}>
                     
                     {showSuccessBottom ? (
                       // Success State
                       <div className="text-center py-4">
-                        <div className="inline-flex items-center justify-center w-16 h-16 bg-green-500 rounded-full mb-4 animate-bounce">
-                          <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div className="inline-flex items-center justify-center w-12 h-12 md:w-16 md:h-16 bg-green-500 rounded-full mb-4 animate-bounce">
+                          <svg className="w-6 h-6 md:w-8 md:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                           </svg>
                         </div>
-                        <h3 className="text-xl font-bold text-white mb-2">Welcome to the waitlist! 🚀</h3>
-                        <p className="text-gray-300">You'll be among the first to experience ReWork when we launch!</p>
+                        <h3 className="text-lg md:text-xl font-bold text-white mb-2">Welcome to the waitlist! 🚀</h3>
+                        <p className="text-sm md:text-base text-gray-300">You'll be among the first to experience ReWork when we launch!</p>
                       </div>
                     ) : (
                       // Form State  
                       <form onSubmit={handleSubmitBottom}>
-                        <div className="flex flex-col sm:flex-row gap-4">
-                          <div className="relative flex-1">
+                        <div className="flex flex-col gap-3 md:gap-4">
+                          <div className="relative">
                             <input
                               type="email"
                               placeholder="Enter your email"
                               value={emailValueBottom}
                               onChange={handleEmailChangeBottom}
-                              className={`w-full px-6 py-4 bg-white/10 border rounded-xl text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:border-transparent transition-all duration-300 text-lg backdrop-blur-sm ${
+                              className={`w-full px-4 md:px-6 py-3 md:py-4 bg-white/10 border rounded-xl text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:border-transparent transition-all duration-300 text-base md:text-lg backdrop-blur-sm ${
                                 emailErrorBottom ? 'border-red-500 focus:ring-red-500' : 'border-white/20 focus:ring-[#2CC7D0]'
                               }`}
                               disabled={isSubmittingBottom}
                             />
                             {emailErrorBottom && (
-                              <div className="absolute -bottom-6 left-0 text-red-400 text-sm flex items-center gap-1">
-                                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                              <div className="absolute -bottom-6 left-0 text-red-400 text-xs md:text-sm flex items-center gap-1">
+                                <svg className="w-3 h-3 md:w-4 md:h-4" fill="currentColor" viewBox="0 0 20 20">
                                   <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
                                 </svg>
                                 {emailErrorBottom}
@@ -822,7 +878,7 @@ export default function Home() {
                           <button 
                             type="submit"
                             disabled={isSubmittingBottom || !!emailErrorBottom}
-                            className={`px-8 py-4 bg-gradient-to-r from-[#2CC7D0] to-[#3A7BF7] text-white font-semibold rounded-xl transition-all duration-300 shadow-lg text-lg flex items-center gap-2 min-w-[160px] justify-center ${
+                            className={`w-full px-6 md:px-8 py-3 md:py-4 bg-gradient-to-r from-[#2CC7D0] to-[#3A7BF7] text-white font-semibold rounded-xl transition-all duration-300 shadow-lg text-base md:text-lg flex items-center gap-2 justify-center ${
                               isSubmittingBottom || emailErrorBottom 
                                 ? 'opacity-50 cursor-not-allowed' 
                                 : 'hover:from-[#3A7BF7] hover:to-[#8B5CF6] hover:shadow-xl hover:scale-105'
@@ -830,15 +886,16 @@ export default function Home() {
                           >
                             {isSubmittingBottom ? (
                               <>
-                                <svg className="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
+                                <svg className="animate-spin w-4 h-4 md:w-5 md:h-5" fill="none" viewBox="0 0 24 24">
                                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                 </svg>
-                                Joining...
+                                <span className="hidden sm:inline">Joining...</span>
+                                <span className="sm:hidden">...</span>
                               </>
                             ) : (
                               <>
-                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                                 </svg>
                                 Get Notified
@@ -850,8 +907,8 @@ export default function Home() {
                     )}
                     
                     {!showSuccessBottom && (
-                      <div className="mt-4 text-center">
-                        <p className="text-sm text-gray-400">
+                      <div className="mt-3 md:mt-4 text-center">
+                        <p className="text-xs md:text-sm text-gray-400">
                           🚀 <span className="text-[#2CC7D0] font-semibold">No spam, ever.</span>
                         </p>
                       </div>
@@ -864,25 +921,25 @@ export default function Home() {
         </section>
       </main>
 
-      {/* Modern Compact Footer */}
-      <footer className="relative w-full bg-[#0F172A] py-8 text-white overflow-hidden border-t border-white/5">
-        {/* Very subtle footer orbs */}
-        <div className="absolute top-4 right-40 w-40 h-40 bg-[#3A7BF7]/4 rounded-full blur-3xl" />
-        <div className="absolute bottom-4 left-32 w-52 h-52 bg-[#2CC7D0]/3 rounded-full blur-3xl" />
+      {/* Modern Compact Footer - responsive */}
+      <footer className="relative w-full bg-[#0F172A] py-6 md:py-8 text-white overflow-hidden border-t border-white/5">
+        {/* Very subtle footer orbs - hide on small screens */}
+        <div className="hidden md:block absolute top-4 right-40 w-40 h-40 bg-[#3A7BF7]/4 rounded-full blur-3xl" />
+        <div className="hidden md:block absolute bottom-4 left-32 w-52 h-52 bg-[#2CC7D0]/3 rounded-full blur-3xl" />
         
         <div className="container px-4 md:px-6 relative z-10">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4 md:gap-6">
             
             {/* Left: Logo & Social */}
-            <div className="flex flex-col md:flex-row items-center gap-6">
-              <div className="flex items-center gap-3">
-                <FileText className="h-5 w-5 text-[#2CC7D0]" />
-                <span className="text-lg font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">ReWork</span>
+            <div className="flex flex-col items-center md:flex-row md:items-center gap-4 md:gap-6">
+              <div className="flex items-center gap-2 md:gap-3">
+                <FileText className="h-4 w-4 md:h-5 md:w-5 text-[#2CC7D0]" />
+                <span className="text-base md:text-lg font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">ReWork</span>
                 <span className="text-sm text-gray-400 hidden md:block">•</span>
-                <span className="text-sm text-gray-400">Smart tech for smarter jobs</span>
+                <span className="text-xs md:text-sm text-gray-400 text-center md:text-left">Smart tech for smarter jobs</span>
               </div>
               
-              <div className="flex space-x-4">
+              <div className="flex space-x-3 md:space-x-4">
                 <Link href="#" className="text-gray-400 hover:text-[#2CC7D0] transition-colors duration-300 hover:scale-110 transform">
                   <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z" />
@@ -904,14 +961,14 @@ export default function Home() {
             </div>
 
             {/* Right: Essential Links & Copyright */}
-            <div className="flex flex-col md:flex-row items-center gap-6 text-sm">
-              <div className="flex items-center gap-6">
+            <div className="flex flex-col items-center md:flex-row md:items-center gap-4 md:gap-6 text-xs md:text-sm">
+              <div className="flex items-center gap-4 md:gap-6">
                 <Link href="#features" className="text-gray-400 hover:text-white transition-colors duration-300">Features</Link>
                 <Link href="#how-it-works" className="text-gray-400 hover:text-white transition-colors duration-300">How It Works</Link>
                 <Link href="#faq" className="text-gray-400 hover:text-white transition-colors duration-300">FAQ</Link>
                 <Link href="#" className="text-gray-400 hover:text-white transition-colors duration-300">Privacy</Link>
               </div>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 md:gap-3">
                 <div className="text-xs text-gray-500">
                   © 2025 ReWork. All rights reserved.
                 </div>

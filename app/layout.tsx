@@ -1,8 +1,9 @@
-// app/layout.tsx - Clean SEO without warnings
+// app/layout.tsx - Clean SEO without warnings + reCAPTCHA
 import "@/app/globals.css"
 import { Inter } from "next/font/google"
 import GoogleAnalytics from "@/components/GoogleAnalytics"
 import { Metadata, Viewport } from "next"
+import Script from "next/script"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -105,7 +106,15 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
       <body className={inter.className}>
+        {/* Google Analytics */}
         <GoogleAnalytics />
+        
+        {/* reCAPTCHA v3 Script - loaded after page is interactive */}
+        <Script
+          src={`https://www.google.com/recaptcha/api.js?render=${process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}`}
+          strategy="afterInteractive"
+        />
+        
         {children}
       </body>
     </html>
