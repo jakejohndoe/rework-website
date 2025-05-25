@@ -354,8 +354,8 @@ export default function Home() {
                 <Image
                   src="/rework-logo-detailed.png"
                   alt="ReWork"
-                  width={40}
-                  height={40}
+                  width={75}
+                  height={75}
                   className="h-8 w-8 md:h-10 md:w-10 group-hover:scale-110 transition-all duration-300 object-contain"
                 />
                 <div className="absolute inset-0 bg-[#2CC7D0]/30 rounded-full blur-md group-hover:blur-lg group-hover:bg-[#3A7BF7]/30 transition-all duration-300" />
