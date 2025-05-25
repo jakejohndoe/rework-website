@@ -351,7 +351,13 @@ export default function Home() {
           <div className="flex items-center gap-2">
             <Link href="#top" className="flex items-center gap-2 hover:opacity-90 transition-all duration-300 group cursor-pointer">
               <div className="relative">
-                <FileText className="h-5 w-5 md:h-6 md:w-6 text-[#2CC7D0] group-hover:scale-110 group-hover:text-[#3A7BF7] transition-all duration-300" />
+                <Image
+                  src="/rework-logo-detailed.png"
+                  alt="ReWork"
+                  width={24}
+                  height={24}
+                  className="h-5 w-5 md:h-6 md:w-6 group-hover:scale-110 transition-all duration-300 object-contain"
+                />
                 <div className="absolute inset-0 bg-[#2CC7D0]/30 rounded-full blur-md group-hover:blur-lg group-hover:bg-[#3A7BF7]/30 transition-all duration-300" />
               </div>
               <span className="text-lg md:text-xl font-bold bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent group-hover:from-[#2CC7D0] group-hover:via-white group-hover:to-[#3A7BF7] transition-all duration-300">
