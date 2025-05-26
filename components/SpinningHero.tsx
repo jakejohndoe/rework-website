@@ -87,7 +87,7 @@ export function SpinningHero() {
         {/* Tagline - matching original */}
         <div className="text-center -mt-20 md:-mt-28 lg:-mt-32 xl:-mt-36">
           <p className="text-base md:text-lg lg:text-xl font-bold bg-gradient-to-r from-[#2CC7D0] to-[#3A7BF7] bg-clip-text text-transparent tracking-tight">
-            Smart tech, for smarter jobs.
+            smart tech, for smarter jobs.
           </p>
         </div>
       </div>
