@@ -780,7 +780,7 @@ export default function Home() {
                     },
                     {
                       question: "When will ReWork be available?",
-                      answer: "We're working hard to launch ReWork in early 2024. Sign up for our waitlist to be notified as soon as we're live and get early access to the platform."
+                      answer: "We're working hard to launch ReWork in July 2025. Sign up for our waitlist to be notified as soon as we're live and get early access to the platform."
                     },
                     {
                       question: "Is my data secure with ReWork?",
@@ -945,7 +945,7 @@ export default function Home() {
               />
               <span className="text-base md:text-lg font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">ReWork</span>
               <span className="text-sm text-gray-400 hidden md:block">•</span>
-              <span className="text-xs md:text-sm text-gray-400 text-center md:text-left">Smart tech for smarter jobs</span>
+              <span className="text-xs md:text-sm text-gray-400 text-center md:text-left">smart tech for smarter jobs</span>
             </div>
               
               <div className="flex space-x-3 md:space-x-4">
