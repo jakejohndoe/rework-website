@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getDatabase } from '@/lib/mongodb';
 import { checkRateLimit, getClientIP, shouldBypassRateLimit, RATE_LIMITS } from '@/lib/rateLimiter';
 import { verifyReCaptchaToken } from '@/lib/recaptcha';
-import { sendWelcomeEmail } from '@/lib/resend';
+import { sendWelcomeEmail, sendSignupNotification } from '@/lib/resend';
 
 interface EmailSubmission {
   email: string;
@@ -141,6 +141,16 @@ export async function POST(request: NextRequest) {
           }
         );
         console.log('📧 Welcome email sent and database updated');
+
+        // 🔔 SEND NOTIFICATION TO YOURSELF
+        try {
+          await sendSignupNotification(email, source);
+          console.log('📧 Signup notification sent successfully');
+        } catch (notificationError) {
+          console.error('❌ Signup notification failed (not critical):', notificationError);
+          // Don't fail the whole request if notification fails
+        }
+
       } else {
         console.error('❌ Welcome email failed, but signup still successful:', emailResult.error);
         // Don't fail the whole request if email fails - user is still signed up

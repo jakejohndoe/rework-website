@@ -41,6 +41,43 @@ export async function sendWelcomeEmail({ email, source = 'unknown' }: WelcomeEma
   }
 }
 
+// NEW FUNCTION: Send notification to yourself when someone signs up
+export async function sendSignupNotification(userEmail: string, source: string) {
+  try {
+    console.log('📧 Sending signup notification for:', userEmail);
+
+    const { data, error } = await resend.emails.send({
+      from: 'ReWork <hello@rework.solutions>',
+      to: 'hello@rework.solutions', // this sends to YOU
+      subject: `🎉 New ReWork Signup!`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; background: #f8fafc; padding: 40px; border-radius: 12px;">
+          <h2 style="color: #0f172a; margin-bottom: 24px;">New waitlist signup! 🚀</h2>
+          <div style="background: white; padding: 24px; border-radius: 8px; border-left: 4px solid #2CC7D0;">
+            <p style="margin: 8px 0; color: #374151;"><strong>Email:</strong> ${userEmail}</p>
+            <p style="margin: 8px 0; color: #374151;"><strong>Source:</strong> ${source}</p>
+            <p style="margin: 8px 0; color: #374151;"><strong>Time:</strong> ${new Date().toLocaleString()}</p>
+          </div>
+          <hr style="margin: 24px 0; border: none; border-top: 1px solid #e5e7eb;">
+          <p style="color: #6b7280; font-size: 14px; margin: 0;">Check your admin dashboard at <a href="https://rework.solutions/admin/emails" style="color: #2CC7D0;">rework.solutions/admin/emails</a> for more details.</p>
+        </div>
+      `
+    });
+
+    if (error) {
+      console.error('❌ Signup notification error:', error);
+      return { success: false, error };
+    }
+
+    console.log('✅ Signup notification sent successfully:', data?.id);
+    return { success: true, data };
+
+  } catch (error) {
+    console.error('❌ Failed to send signup notification:', error);
+    return { success: false, error };
+  }
+}
+
 // Beautiful modern HTML email template with ReWork branding
 function getWelcomeEmailHTML(email: string, source: string): string {
   // Create unsubscribe URL with email parameter
