@@ -24,6 +24,7 @@ import { EmailCapture } from "@/components/email-capture"
 import { CursorEffect } from "@/components/cursor-effect"
 import { FloatingElements } from "@/components/floating-elements"
 import { AnimatedSection } from "@/components/animated-section"
+import { SpinningHero } from "@/components/SpinningHero"
 import { analytics } from '@/lib/analytics'
 import { getReCaptchaToken } from '@/lib/recaptcha'
 import { useSignupCount } from '@/lib/useSignupCount'
@@ -560,31 +561,9 @@ export default function Home() {
                   </div>
                 </div>
                 
-                {/* Logo section - responsive sizing */}
                 <div className="flex items-start justify-center lg:items-start lg:justify-center lg:-mt-16 xl:-mt-32">
-                  <div className="relative group">
-                    {/* Perfect balance glow - responsive sizing */}
-                    <div className="absolute -inset-10 md:-inset-20 bg-gradient-to-r from-[#2CC7D0] to-[#3A7BF7] rounded-full blur-3xl opacity-10 group-hover:opacity-15 transition-opacity duration-1000" />
-                    
-                    <div className="relative flex flex-col items-center justify-center">
-                      <div className="h-[400px] w-[400px] md:h-[550px] md:w-[550px] lg:h-[650px] lg:w-[650px] xl:h-[720px] xl:w-[720px] flex items-center justify-center">
-                        <Image
-                          src="/rework-logo-detailed.png"
-                          alt="ReWork AI Resume Optimization"
-                          width={610}
-                          height={610}
-                          className="object-contain drop-shadow-2xl group-hover:scale-105 transition-all duration-1000 w-[380px] h-[380px] md:w-[520px] md:h-[520px] lg:w-[610px] lg:h-[610px] xl:w-[680px] xl:h-[680px] animate-gentle-float"
-                          priority
-                        />
-                      </div>
-                      
-                      {/* Slogan - responsive positioning */}
-                      <div className="text-center -mt-20 md:-mt-28 lg:-mt-32 xl:-mt-36">
-                        <p className="text-base md:text-lg lg:text-xl font-bold bg-gradient-to-r from-[#2CC7D0] to-[#3A7BF7] bg-clip-text text-transparent tracking-tight">
-                          Smart tech, for smarter jobs.
-                        </p>
-                      </div>
-                    </div>
+                  <div className="h-[400px] w-[400px] md:h-[550px] md:w-[550px] lg:h-[650px] lg:w-[650px] xl:h-[720px] xl:w-[720px] flex items-center justify-center">
+                    <SpinningHero />
                   </div>
                 </div>
               </div>
