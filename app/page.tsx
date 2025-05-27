@@ -426,7 +426,7 @@ export default function Home() {
                   height={120}
                   className="h-24 w-24 md:h-30 md:w-30 group-hover:scale-110 transition-all duration-300 object-contain"
                 />
-                <div className="absolute inset-0 bg-[#2CC7D0]/30 rounded-full blur-md group-hover:blur-lg group-hover:bg-[#3A7BF7]/30 transition-all duration-300" />
+                <div className="absolute inset-0 bg-[#2CC7D0]/10 rounded-full blur-sm group-hover:blur-md group-hover:bg-[#3A7BF7]/15 transition-all duration-300" />
               </div>
               <span className="text-lg md:text-xl font-bold bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent group-hover:from-[#2CC7D0] group-hover:via-white group-hover:to-[#3A7BF7] transition-all duration-300">
                 ReWork
