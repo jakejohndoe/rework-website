@@ -53,13 +53,18 @@ function MobileMenu({ onGetStartedClick }: { onGetStartedClick: () => void }) {
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden'
+      document.body.style.position = 'fixed'
+      document.body.style.width = '100%'
     } else {
-      document.body.style.overflow = 'unset'
+      document.body.style.overflow = ''
+      document.body.style.position = ''
+      document.body.style.width = ''
     }
     
-    // Cleanup on unmount
     return () => {
-      document.body.style.overflow = 'unset'
+      document.body.style.overflow = ''
+      document.body.style.position = ''
+      document.body.style.width = ''
     }
   }, [isOpen])
   
@@ -69,7 +74,7 @@ function MobileMenu({ onGetStartedClick }: { onGetStartedClick: () => void }) {
         variant="ghost" 
         size="icon" 
         onClick={() => setIsOpen(!isOpen)}
-        className="md:hidden hover:bg-white/10 hover:scale-105 transition-all duration-300 rounded-full group cursor-pointer relative z-[60]"
+        className="md:hidden hover:bg-white/10 hover:scale-105 transition-all duration-300 rounded-full group cursor-pointer"
       >
         <svg className="h-6 w-6 text-white/80 group-hover:text-white transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           {isOpen ? (
@@ -85,25 +90,36 @@ function MobileMenu({ onGetStartedClick }: { onGetStartedClick: () => void }) {
         <span className="sr-only">Toggle menu</span>
       </Button>
       
-      {isOpen && (
-        <>
-          {/* Fixed backdrop */}
-          <div 
-            className="fixed inset-0 bg-black/90 backdrop-blur-sm z-[100] md:hidden"
-            onClick={() => setIsOpen(false)}
-            style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0 }}
-          />
-          
+      {/* Mobile Menu Overlay - render at body level */}
+      {isOpen && typeof window !== 'undefined' && (
+        <div 
+          className="md:hidden"
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: 99999,
+            backgroundColor: 'rgba(0, 0, 0, 0.95)',
+            backdropFilter: 'blur(8px)'
+          }}
+          onClick={() => setIsOpen(false)}
+        >
           {/* Menu Panel */}
           <div 
-            className="fixed right-0 top-0 h-full w-80 max-w-[85vw] bg-[#0F172A] border-l border-white/10 shadow-2xl z-[101] md:hidden"
-            style={{ position: 'fixed' }}
+            className="h-full w-80 max-w-[85vw] bg-[#0F172A] border-l border-white/10 shadow-2xl ml-auto"
+            style={{
+              position: 'relative',
+              zIndex: 100000
+            }}
+            onClick={(e) => e.stopPropagation()}
           >
             {/* Close button */}
             <div className="flex justify-end p-4">
               <button
                 onClick={() => setIsOpen(false)}
-                className="p-2 text-white/60 hover:text-white transition-colors z-[102]"
+                className="p-2 text-white/60 hover:text-white transition-colors"
               >
                 <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -144,7 +160,7 @@ function MobileMenu({ onGetStartedClick }: { onGetStartedClick: () => void }) {
               </button>
             </div>
           </div>
-        </>
+        </div>
       )}
     </>
   )
