@@ -494,7 +494,7 @@ export default function Home() {
           
           <div className="container relative px-4 md:px-6 z-10">
             <AnimatedSection>
-              <div className="grid gap-4 md:gap-8 lg:grid-cols-2 lg:gap-16 items-start lg:items-center">
+              <div className="grid gap-8 md:gap-8 lg:grid-cols-2 lg:gap-16 items-start lg:items-center">
                 {/* Text and CTA - show second on mobile, first on desktop */}
                 <div className="flex flex-col justify-center space-y-6 md:space-y-8 order-2 lg:order-1">
                   <div className="space-y-4 md:space-y-6">
@@ -627,8 +627,8 @@ export default function Home() {
                 </div>
                 
                 {/* Logo - show first on mobile, second on desktop */}
-                <div className="flex items-start justify-center lg:items-start lg:justify-center lg:-mt-16 xl:-mt-32 order-1 lg:order-2 pt-4 lg:pt-0 pb-8 lg:pb-0">
-                  <div className="h-[200px] w-[200px] md:h-[320px] md:w-[320px] lg:h-[650px] lg:w-[650px] xl:h-[720px] xl:w-[720px] flex items-center justify-center">
+                <div className="flex items-start justify-center lg:items-start lg:justify-center lg:-mt-16 xl:-mt-32 order-1 lg:order-2">
+                  <div className="h-[300px] w-[300px] md:h-[400px] md:w-[400px] lg:h-[650px] lg:w-[650px] xl:h-[720px] xl:w-[720px] flex items-center justify-center">
                     <SpinningHero />
                   </div>
                 </div>
