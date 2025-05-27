@@ -46,9 +46,11 @@ function SignupCounter() {
 }
 
 // Simple Mobile Menu Component
-function MobileMenu({ onGetStartedClick }: { onGetStartedClick: () => void }) {
-  const [isOpen, setIsOpen] = useState(false)
-  
+function MobileMenu({ onGetStartedClick, isOpen, setIsOpen }: { 
+  onGetStartedClick: () => void
+  isOpen: boolean
+  setIsOpen: (open: boolean) => void
+}) {
   return (
     <>
       <Button 
@@ -80,7 +82,7 @@ function MobileMenu({ onGetStartedClick }: { onGetStartedClick: () => void }) {
             width: '100vw',
             height: '100vh',
             backgroundColor: 'rgba(0, 0, 0, 0.9)',
-            zIndex: 999999,
+            zIndex: 9999999,
             display: 'flex',
             justifyContent: 'flex-end'
           }}
@@ -169,6 +171,7 @@ export default function Home() {
   const [emailValue, setEmailValue] = useState('')
   const [showSuccess, setShowSuccess] = useState(false)
   const [emailError, setEmailError] = useState('')
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   
   // Bottom form states
   const [isSubmittingBottom, setIsSubmittingBottom] = useState(false)
@@ -400,7 +403,7 @@ export default function Home() {
   
   return (
     <div className="flex min-h-screen flex-col relative">
-      <CursorEffect />
+      {!isMobileMenuOpen && <CursorEffect />}
       <FloatingElements />
       
       {/* Enhanced Navigation */}
@@ -476,7 +479,11 @@ export default function Home() {
             </button>
             
             {/* Mobile Menu */}
-            <MobileMenu onGetStartedClick={handleGetStartedClick} />
+            <MobileMenu 
+              onGetStartedClick={handleGetStartedClick} 
+              isOpen={isMobileMenuOpen} 
+              setIsOpen={setIsMobileMenuOpen} 
+            />
           </div>
         </div>
       </header>
