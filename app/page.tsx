@@ -72,22 +72,86 @@ function MobileMenu({ onGetStartedClick }: { onGetStartedClick: () => void }) {
       </Button>
       
       {isOpen && (
-        <div className="fixed inset-0 z-50 md:hidden">
-          <div className="fixed inset-0 bg-black/60" onClick={() => setIsOpen(false)} />
-          <div className="fixed right-0 top-0 h-full w-64 bg-[#0F172A] border-l border-white/10 p-6">
-            <div className="flex flex-col space-y-6 mt-16">
-              <a href="#features" onClick={() => setIsOpen(false)} className="text-white hover:text-[#2CC7D0] transition-colors text-lg font-medium">
+        <div 
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100vw',
+            height: '100vh',
+            backgroundColor: 'rgba(0, 0, 0, 0.9)',
+            zIndex: 999999,
+            display: 'flex',
+            justifyContent: 'flex-end'
+          }}
+          onClick={() => setIsOpen(false)}
+        >
+          <div 
+            style={{
+              width: '280px',
+              height: '100%',
+              backgroundColor: '#0F172A',
+              borderLeft: '1px solid rgba(255, 255, 255, 0.1)',
+              padding: '80px 24px 24px 24px'
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+              <a 
+                href="#features" 
+                onClick={() => setIsOpen(false)}
+                style={{ 
+                  color: 'white', 
+                  fontSize: '20px', 
+                  fontWeight: '500',
+                  textDecoration: 'none',
+                  paddingBottom: '8px',
+                  borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
+                }}
+              >
                 Features
               </a>
-              <a href="#how-it-works" onClick={() => setIsOpen(false)} className="text-white hover:text-[#2CC7D0] transition-colors text-lg font-medium">
+              <a 
+                href="#how-it-works" 
+                onClick={() => setIsOpen(false)}
+                style={{ 
+                  color: 'white', 
+                  fontSize: '20px', 
+                  fontWeight: '500',
+                  textDecoration: 'none',
+                  paddingBottom: '8px',
+                  borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
+                }}
+              >
                 How It Works
               </a>
-              <a href="#faq" onClick={() => setIsOpen(false)} className="text-white hover:text-[#2CC7D0] transition-colors text-lg font-medium">
+              <a 
+                href="#faq" 
+                onClick={() => setIsOpen(false)}
+                style={{ 
+                  color: 'white', 
+                  fontSize: '20px', 
+                  fontWeight: '500',
+                  textDecoration: 'none',
+                  paddingBottom: '8px',
+                  borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
+                }}
+              >
                 FAQ
               </a>
               <button 
                 onClick={() => { setIsOpen(false); onGetStartedClick(); }}
-                className="mt-6 px-4 py-3 bg-gradient-to-r from-[#2CC7D0] to-[#3A7BF7] text-white rounded-lg text-left font-semibold"
+                style={{
+                  marginTop: '32px',
+                  padding: '16px 24px',
+                  background: 'linear-gradient(to right, #2CC7D0, #3A7BF7)',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '12px',
+                  fontSize: '18px',
+                  fontWeight: '600',
+                  cursor: 'pointer'
+                }}
               >
                 Get Started
               </button>
