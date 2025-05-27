@@ -36,7 +36,7 @@ function SignupCounter() {
   if (loading || error || count === 0) return null;
   
   return (
-    <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/5 border border-white/10 rounded-full backdrop-blur-sm">
+    <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/5 border border-white/10 rounded-full backdrop-blur-sm animate-pulse">
       <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
       <span className="text-xs md:text-sm text-gray-300 font-medium">
         <span className="text-[#2CC7D0] font-semibold">{count.toLocaleString()}</span> people waiting
@@ -510,7 +510,7 @@ export default function Home() {
                       <span className="text-xs md:text-sm font-medium text-white">AI-Powered Resume Optimization</span>
                     </div>
                     
-                    <h1 className="text-3xl font-bold tracking-tight text-white sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl">
+                    <h1 className="text-3xl font-bold tracking-tight text-white sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl tracking-wide">
                       Tailor Your Resume in{" "}
                       <span className="relative bg-gradient-to-r from-[#2CC7D0] via-[#3A7BF7] to-[#8B5CF6] bg-clip-text text-transparent animate-gradient-x">
                         <span className="absolute inset-0 bg-gradient-to-r from-[#2CC7D0] via-[#3A7BF7] to-[#8B5CF6] blur-2xl opacity-30"></span>
@@ -526,7 +526,7 @@ export default function Home() {
                   
                   {/* Enhanced Email Capture Form - responsive padding and sizing */}
                   <div className="mt-6 md:mt-8">
-                    <div className={`relative p-4 md:p-6 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl transition-all duration-500 ${
+                    <div className={`relative p-4 md:p-6 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl shadow-black/20 transition-all duration-500 ${
                       highlightEmail ? 'ring-4 ring-[#2CC7D0] ring-opacity-50 shadow-[0_0_30px_rgba(44,199,208,0.3)] scale-105' : ''
                     } ${showSuccess ? 'ring-4 ring-green-500 ring-opacity-50 shadow-[0_0_30px_rgba(34,197,94,0.3)]' : ''}`}>
                       
@@ -912,7 +912,7 @@ export default function Home() {
                   </p>
                 </div>
                 <div className="w-full max-w-lg">
-                  <div className={`relative p-4 md:p-6 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl transition-all duration-500 ${
+                  <div className={`relative p-4 md:p-6 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl shadow-black/20 transition-all duration-500 ${
                     showSuccessBottom ? 'ring-4 ring-green-500 ring-opacity-50 shadow-[0_0_30px_rgba(34,197,94,0.3)]' : ''
                   }`}>
                     
