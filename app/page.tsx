@@ -627,8 +627,8 @@ export default function Home() {
                 </div>
                 
                 {/* Logo - show first on mobile, second on desktop */}
-                <div className="flex items-start justify-center lg:items-start lg:justify-center lg:-mt-16 xl:-mt-32 order-1 lg:order-2 pt-4 lg:pt-0 pb-6 lg:pb-0">
-                  <div className="h-[240px] w-[240px] md:h-[380px] md:w-[380px] lg:h-[650px] lg:w-[650px] xl:h-[720px] xl:w-[720px] flex items-center justify-center">
+                <div className="flex items-start justify-center lg:items-start lg:justify-center lg:-mt-16 xl:-mt-32 order-1 lg:order-2 pt-4 lg:pt-0 pb-8 lg:pb-0">
+                  <div className="h-[200px] w-[200px] md:h-[320px] md:w-[320px] lg:h-[650px] lg:w-[650px] xl:h-[720px] xl:w-[720px] flex items-center justify-center">
                     <SpinningHero />
                   </div>
                 </div>
