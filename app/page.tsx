@@ -69,7 +69,7 @@ function MobileMenu({ onGetStartedClick }: { onGetStartedClick: () => void }) {
         variant="ghost" 
         size="icon" 
         onClick={() => setIsOpen(!isOpen)}
-        className="md:hidden hover:bg-white/10 hover:scale-105 transition-all duration-300 rounded-full group cursor-pointer relative z-50"
+        className="md:hidden hover:bg-white/10 hover:scale-105 transition-all duration-300 rounded-full group cursor-pointer relative z-[60]"
       >
         <svg className="h-6 w-6 text-white/80 group-hover:text-white transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           {isOpen ? (
@@ -86,20 +86,24 @@ function MobileMenu({ onGetStartedClick }: { onGetStartedClick: () => void }) {
       </Button>
       
       {isOpen && (
-        <div className="fixed inset-0 z-[9999] md:hidden">
-          {/* Better backdrop */}
+        <>
+          {/* Fixed backdrop */}
           <div 
-            className="fixed inset-0 bg-black/80 backdrop-blur-sm" 
-            onClick={() => setIsOpen(false)} 
+            className="fixed inset-0 bg-black/90 backdrop-blur-sm z-[100] md:hidden"
+            onClick={() => setIsOpen(false)}
+            style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0 }}
           />
           
           {/* Menu Panel */}
-          <div className="fixed right-0 top-0 h-full w-80 max-w-[85vw] bg-[#0F172A] border-l border-white/10 shadow-2xl">
+          <div 
+            className="fixed right-0 top-0 h-full w-80 max-w-[85vw] bg-[#0F172A] border-l border-white/10 shadow-2xl z-[101] md:hidden"
+            style={{ position: 'fixed' }}
+          >
             {/* Close button */}
             <div className="flex justify-end p-4">
               <button
                 onClick={() => setIsOpen(false)}
-                className="p-2 text-white/60 hover:text-white transition-colors"
+                className="p-2 text-white/60 hover:text-white transition-colors z-[102]"
               >
                 <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -140,7 +144,7 @@ function MobileMenu({ onGetStartedClick }: { onGetStartedClick: () => void }) {
               </button>
             </div>
           </div>
-        </div>
+        </>
       )}
     </>
   )
