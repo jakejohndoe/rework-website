@@ -49,25 +49,6 @@ function SignupCounter() {
 function MobileMenu({ onGetStartedClick }: { onGetStartedClick: () => void }) {
   const [isOpen, setIsOpen] = useState(false)
   
-  // Lock body scroll when menu is open
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden'
-      document.body.style.position = 'fixed'
-      document.body.style.width = '100%'
-    } else {
-      document.body.style.overflow = ''
-      document.body.style.position = ''
-      document.body.style.width = ''
-    }
-    
-    return () => {
-      document.body.style.overflow = ''
-      document.body.style.position = ''
-      document.body.style.width = ''
-    }
-  }, [isOpen])
-  
   return (
     <>
       <Button 
@@ -90,71 +71,23 @@ function MobileMenu({ onGetStartedClick }: { onGetStartedClick: () => void }) {
         <span className="sr-only">Toggle menu</span>
       </Button>
       
-      {/* Mobile Menu Overlay - render at body level */}
-      {isOpen && typeof window !== 'undefined' && (
-        <div 
-          className="md:hidden"
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            zIndex: 99999,
-            backgroundColor: 'rgba(0, 0, 0, 0.95)',
-            backdropFilter: 'blur(8px)'
-          }}
-          onClick={() => setIsOpen(false)}
-        >
-          {/* Menu Panel */}
-          <div 
-            className="h-full w-80 max-w-[85vw] bg-[#0F172A] border-l border-white/10 shadow-2xl ml-auto"
-            style={{
-              position: 'relative',
-              zIndex: 100000
-            }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Close button */}
-            <div className="flex justify-end p-4">
-              <button
-                onClick={() => setIsOpen(false)}
-                className="p-2 text-white/60 hover:text-white transition-colors"
-              >
-                <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-            
-            {/* Menu Items */}
-            <div className="flex flex-col space-y-8 px-6 py-4">
-              <a 
-                href="#features" 
-                onClick={() => setIsOpen(false)} 
-                className="text-white hover:text-[#2CC7D0] transition-colors text-xl font-medium py-2 border-b border-white/10"
-              >
+      {isOpen && (
+        <div className="fixed inset-0 z-50 md:hidden">
+          <div className="fixed inset-0 bg-black/60" onClick={() => setIsOpen(false)} />
+          <div className="fixed right-0 top-0 h-full w-64 bg-[#0F172A] border-l border-white/10 p-6">
+            <div className="flex flex-col space-y-6 mt-16">
+              <a href="#features" onClick={() => setIsOpen(false)} className="text-white hover:text-[#2CC7D0] transition-colors text-lg font-medium">
                 Features
               </a>
-              <a 
-                href="#how-it-works" 
-                onClick={() => setIsOpen(false)} 
-                className="text-white hover:text-[#2CC7D0] transition-colors text-xl font-medium py-2 border-b border-white/10"
-              >
+              <a href="#how-it-works" onClick={() => setIsOpen(false)} className="text-white hover:text-[#2CC7D0] transition-colors text-lg font-medium">
                 How It Works
               </a>
-              <a 
-                href="#faq" 
-                onClick={() => setIsOpen(false)} 
-                className="text-white hover:text-[#2CC7D0] transition-colors text-xl font-medium py-2 border-b border-white/10"
-              >
+              <a href="#faq" onClick={() => setIsOpen(false)} className="text-white hover:text-[#2CC7D0] transition-colors text-lg font-medium">
                 FAQ
               </a>
-              
-              {/* CTA Button */}
               <button 
                 onClick={() => { setIsOpen(false); onGetStartedClick(); }}
-                className="mt-8 px-6 py-4 bg-gradient-to-r from-[#2CC7D0] to-[#3A7BF7] text-white rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-300"
+                className="mt-6 px-4 py-3 bg-gradient-to-r from-[#2CC7D0] to-[#3A7BF7] text-white rounded-lg text-left font-semibold"
               >
                 Get Started
               </button>
