@@ -490,7 +490,7 @@ export default function Home() {
 
       <main className="flex-1">
         {/* Hero Section */}
-        <section id="top" className="relative w-full pt-6 pb-16 md:pt-8 md:pb-20 lg:pt-12 lg:pb-32 xl:pt-16 xl:pb-40 overflow-hidden">
+        <section id="top" className="relative w-full pt-2 pb-16 md:pt-8 md:pb-20 lg:pt-12 lg:pb-32 xl:pt-16 xl:pb-40 overflow-hidden">
           {/* Enhanced gradient background for better depth */}
           <div className="absolute inset-0 bg-gradient-to-br from-[#0A0F1C] via-[#0F172A] via-[#1E293B] to-[#0F172A] animate-gradient-x" />
           <div className="absolute inset-0 bg-gradient-to-b from-[#0A0F1C]/80 via-transparent to-[#1E293B]/60" />
