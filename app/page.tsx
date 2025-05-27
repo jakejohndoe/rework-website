@@ -495,7 +495,8 @@ export default function Home() {
           <div className="container relative px-4 md:px-6 z-10">
             <AnimatedSection>
               <div className="grid gap-6 md:gap-8 lg:grid-cols-2 lg:gap-16 items-start lg:items-center">
-                <div className="flex flex-col justify-center space-y-6 md:space-y-8">
+                {/* Text and CTA - show second on mobile, first on desktop */}
+                <div className="flex flex-col justify-center space-y-6 md:space-y-8 order-2 lg:order-1">
                   <div className="space-y-4 md:space-y-6">
                     <div className="inline-flex items-center px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-gradient-to-r from-[#2CC7D0]/10 to-[#3A7BF7]/10 border border-[#2CC7D0]/20 backdrop-blur-sm">
                       <Sparkles className="h-3 w-3 md:h-4 md:w-4 text-[#2CC7D0] mr-2" />
@@ -625,7 +626,8 @@ export default function Home() {
                   </div>
                 </div>
                 
-                <div className="flex items-start justify-center lg:items-start lg:justify-center lg:-mt-16 xl:-mt-32">
+                {/* Logo - show first on mobile, second on desktop */}
+                <div className="flex items-start justify-center lg:items-start lg:justify-center lg:-mt-16 xl:-mt-32 order-1 lg:order-2">
                   <div className="h-[400px] w-[400px] md:h-[550px] md:w-[550px] lg:h-[650px] lg:w-[650px] xl:h-[720px] xl:w-[720px] flex items-center justify-center">
                     <SpinningHero />
                   </div>
