@@ -14,7 +14,9 @@ interface WelcomeEmailData {
 
 export async function sendWelcomeEmail({ email, source = 'unknown' }: WelcomeEmailData) {
   try {
-    console.log('📧 Sending welcome email to:', email);
+    if (process.env.NODE_ENV === 'development') {
+      console.log('📧 Sending welcome email to:', email);
+    }
 
     // For testing: send to your verified email, but personalize for the actual user
     const testEmail = process.env.NODE_ENV === 'development' ? 'hello@rework.solutions' : email;
@@ -32,7 +34,9 @@ export async function sendWelcomeEmail({ email, source = 'unknown' }: WelcomeEma
       return { success: false, error };
     }
 
-    console.log('✅ Welcome email sent successfully:', data?.id);
+    if (process.env.NODE_ENV === 'development') {
+      console.log('✅ Welcome email sent successfully:', data?.id);
+    }
     return { success: true, data };
 
   } catch (error) {
@@ -44,7 +48,9 @@ export async function sendWelcomeEmail({ email, source = 'unknown' }: WelcomeEma
 // NEW FUNCTION: Send notification to yourself when someone signs up
 export async function sendSignupNotification(userEmail: string, source: string) {
   try {
-    console.log('📧 Sending signup notification for:', userEmail);
+    if (process.env.NODE_ENV === 'development') {
+      console.log('📧 Sending signup notification for:', userEmail);
+    }
 
     const { data, error } = await resend.emails.send({
       from: 'ReWork <hello@rework.solutions>',
@@ -69,7 +75,9 @@ export async function sendSignupNotification(userEmail: string, source: string) 
       return { success: false, error };
     }
 
-    console.log('✅ Signup notification sent successfully:', data?.id);
+    if (process.env.NODE_ENV === 'development') {
+      console.log('✅ Signup notification sent successfully:', data?.id);
+    }
     return { success: true, data };
 
   } catch (error) {

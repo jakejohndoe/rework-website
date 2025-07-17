@@ -24,14 +24,16 @@ if (process.env.NODE_ENV === 'development') {
     globalWithMongo._mongoClientPromise = client.connect();
     
     // Log connection status for development
-    globalWithMongo._mongoClientPromise
-      .then((client) => {
-        console.log('🎉 MongoDB connected successfully to:', client.db().databaseName);
-        console.log('📧 Email collection ready for signups!');
-      })
-      .catch((error) => {
-        console.error('❌ MongoDB connection failed:', error.message);
-      });
+    if (process.env.NODE_ENV === 'development') {
+      globalWithMongo._mongoClientPromise
+        .then((client) => {
+          console.log('🎉 MongoDB connected successfully to:', client.db().databaseName);
+          console.log('📧 Email collection ready for signups!');
+        })
+        .catch((error) => {
+          console.error('❌ MongoDB connection failed:', error.message);
+        });
+    }
   }
   clientPromise = globalWithMongo._mongoClientPromise;
 } else {
@@ -39,9 +41,8 @@ if (process.env.NODE_ENV === 'development') {
   client = new MongoClient(uri, options);
   clientPromise = client.connect();
   
-  // Log connection for production too (but less verbose)
+  // Log connection errors in production (but not verbose success messages)
   clientPromise
-    .then(() => console.log('MongoDB connected'))
     .catch((error) => console.error('MongoDB connection failed:', error.message));
 }
 

@@ -28,14 +28,18 @@ export async function POST(request: NextRequest) {
     
     if (recaptchaToken) {
       const recaptchaResult = await verifyReCaptchaToken(recaptchaToken);
-      console.log('🔍 reCAPTCHA verification result:', {
-        success: recaptchaResult.success,
-        score: recaptchaResult.score,
-        error: recaptchaResult.error
-      });
+      if (process.env.NODE_ENV === 'development') {
+        console.log('🔍 reCAPTCHA verification result:', {
+          success: recaptchaResult.success,
+          score: recaptchaResult.score,
+          error: recaptchaResult.error
+        });
+      }
 
       if (!recaptchaResult.success) {
-        console.log('❌ reCAPTCHA verification failed:', recaptchaResult.error);
+        if (process.env.NODE_ENV === 'development') {
+          console.log('❌ reCAPTCHA verification failed:', recaptchaResult.error);
+        }
         return NextResponse.json(
           { error: 'Security verification failed. Please try again.' },
           { status: 400 }
@@ -45,7 +49,9 @@ export async function POST(request: NextRequest) {
       // Check reCAPTCHA score (0.0 = bot, 1.0 = human)
       // For email signups, we can be a bit more lenient (0.3+)
       if (recaptchaResult.score < 0.3) {
-        console.log('❌ Low reCAPTCHA score:', recaptchaResult.score);
+        if (process.env.NODE_ENV === 'development') {
+          console.log('❌ Low reCAPTCHA score:', recaptchaResult.score);
+        }
         return NextResponse.json(
           { error: 'Security verification failed. Please try again later.' },
           { status: 400 }
@@ -53,11 +59,15 @@ export async function POST(request: NextRequest) {
       }
 
       recaptchaScore = recaptchaResult.score;
-      console.log('✅ reCAPTCHA passed with score:', recaptchaScore);
+      if (process.env.NODE_ENV === 'development') {
+        console.log('✅ reCAPTCHA passed with score:', recaptchaScore);
+      }
     } else {
       // For development/testing - allow submissions without reCAPTCHA
       // In production, you might want to require it
-      console.log('⚠️ No reCAPTCHA token provided - allowing for development');
+      if (process.env.NODE_ENV === 'development') {
+        console.log('⚠️ No reCAPTCHA token provided - allowing for development');
+      }
     }
 
     // Check rate limit (unless it's a bypass IP like localhost)
@@ -123,7 +133,9 @@ export async function POST(request: NextRequest) {
       throw new Error('Failed to insert email into database');
     }
 
-    console.log('✅ Email signup successful:', email, 'reCAPTCHA score:', recaptchaScore);
+    if (process.env.NODE_ENV === 'development') {
+      console.log('✅ Email signup successful:', email, 'reCAPTCHA score:', recaptchaScore);
+    }
 
     // 📧 SEND WELCOME EMAIL
     try {
@@ -140,23 +152,33 @@ export async function POST(request: NextRequest) {
             } 
           }
         );
-        console.log('📧 Welcome email sent and database updated');
+        if (process.env.NODE_ENV === 'development') {
+          console.log('📧 Welcome email sent and database updated');
+        }
 
         // 🔔 SEND NOTIFICATION TO YOURSELF
         try {
           await sendSignupNotification(email, source);
-          console.log('📧 Signup notification sent successfully');
+          if (process.env.NODE_ENV === 'development') {
+            console.log('📧 Signup notification sent successfully');
+          }
         } catch (notificationError) {
-          console.error('❌ Signup notification failed (not critical):', notificationError);
+          if (process.env.NODE_ENV === 'development') {
+            console.error('❌ Signup notification failed (not critical):', notificationError);
+          }
           // Don't fail the whole request if notification fails
         }
 
       } else {
-        console.error('❌ Welcome email failed, but signup still successful:', emailResult.error);
+        if (process.env.NODE_ENV === 'development') {
+          console.error('❌ Welcome email failed, but signup still successful:', emailResult.error);
+        }
         // Don't fail the whole request if email fails - user is still signed up
       }
     } catch (emailError) {
-      console.error('❌ Welcome email error (signup still successful):', emailError);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('❌ Welcome email error (signup still successful):', emailError);
+      }
       // Don't fail the whole request if email fails
     }
 
