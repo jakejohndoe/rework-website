@@ -87,28 +87,28 @@ export const metadata: Metadata = {
     description: "Tailor your resume in seconds with AI-powered optimization. Beat ATS systems and get more interviews.",
     images: ["/og-image.png"] // Same as OpenGraph
   },
-  // Enhanced favicon setup matching your actual files
+  // Enhanced favicon setup using ReWork simple logo
   icons: {
     icon: [
-      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/rework-logo-simple-cropped.png', sizes: '32x32', type: 'image/png' },
       { url: '/favicon.svg', type: 'image/svg+xml' },
       { url: '/favicon-96x96.png', sizes: '96x96', type: 'image/png' },
     ],
     apple: [
-      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+      { url: '/rework-logo-simple-cropped.png', sizes: '180x180', type: 'image/png' },
     ],
     other: [
       {
         rel: 'icon',
         type: 'image/png',
         sizes: '192x192',
-        url: '/web-app-manifest-192x192.png',
+        url: '/rework-logo-simple-cropped.png',
       },
       {
         rel: 'icon',
         type: 'image/png', 
         sizes: '512x512',
-        url: '/web-app-manifest-512x512.png',
+        url: '/rework-logo-simple-cropped.png',
       },
     ],
   },

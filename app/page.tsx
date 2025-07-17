@@ -430,7 +430,7 @@ export default function Home() {
             <Link href="#top" className="flex items-center gap-2 hover:opacity-90 transition-all duration-300 group cursor-pointer">
               <div className="relative">
                 <Image
-                  src="/rework-logo-detailed.png"
+                  src="/rework-logo-simple-cropped.png"
                   alt="ReWork"
                   width={120}
                   height={120}
@@ -1030,7 +1030,7 @@ export default function Home() {
             <div className="flex flex-col items-center md:flex-row md:items-center gap-4 md:gap-6">
             <div className="flex items-center gap-2 md:gap-3">
               <Image
-                src="/rework-logo-detailed.png"
+                src="/rework-logo-simple-cropped.png"
                 alt="ReWork"
                 width={40}
                 height={40}

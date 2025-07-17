@@ -139,6 +139,16 @@ function getWelcomeEmailHTML(email: string, source: string): string {
           position: relative;
           z-index: 2;
           margin-bottom: 20px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+        
+        .logo-image {
+          width: 60px;
+          height: 60px;
+          margin-bottom: 12px;
+          filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
         }
         
         .logo {
@@ -355,6 +365,7 @@ function getWelcomeEmailHTML(email: string, source: string): string {
           .header, .content { padding: 40px 24px; }
           .welcome-title { font-size: 32px; }
           .logo { font-size: 36px; }
+          .logo-image { width: 48px; height: 48px; }
           .intro-text { font-size: 18px; }
           .cta-section { padding: 30px 20px; }
           .social-links a { margin: 0 8px; }
@@ -368,6 +379,7 @@ function getWelcomeEmailHTML(email: string, source: string): string {
           <!-- Header with Logo -->
           <div class="header">
             <div class="logo-section">
+              <img src="https://rework.solutions/rework-logo-simple-cropped.png" alt="ReWork Logo" class="logo-image" />
               <div class="logo">ReWork</div>
               <div class="tagline">Smart tech, for smarter jobs</div>
             </div>
