@@ -91,8 +91,7 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       { url: '/rework-logo-simple-cropped.png', sizes: '32x32', type: 'image/png' },
-      { url: '/favicon.svg', type: 'image/svg+xml' },
-      { url: '/favicon-96x96.png', sizes: '96x96', type: 'image/png' },
+      { url: '/rework-logo-simple-cropped.png', sizes: '96x96', type: 'image/png' },
     ],
     apple: [
       { url: '/rework-logo-simple-cropped.png', sizes: '180x180', type: 'image/png' },
