@@ -73,12 +73,12 @@ export default function PrivacyPolicy() {
               
               <div className="space-y-4 text-gray-300">
                 <p>
-                  When you join our waitlist, we collect:
+                  When you sign up for ReWork beta, we collect:
                 </p>
                 <ul className="list-disc list-inside space-y-2 ml-4">
                   <li><strong>Email Address:</strong> To notify you when ReWork launches and send important updates</li>
                   <li><strong>Signup Source:</strong> Which form you used to sign up (for analytics)</li>
-                  <li><strong>Timestamp:</strong> When you joined our waitlist</li>
+                  <li><strong>Timestamp:</strong> When you signed up for beta access</li>
                   <li><strong>IP Address:</strong> For security and spam prevention</li>
                   <li><strong>reCAPTCHA Data:</strong> To prevent automated signups</li>
                 </ul>

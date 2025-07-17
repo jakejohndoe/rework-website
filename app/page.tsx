@@ -39,15 +39,14 @@ function SignupCounter() {
     <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/5 border border-white/10 rounded-full backdrop-blur-sm animate-pulse">
       <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
       <span className="text-xs md:text-sm text-gray-300 font-medium">
-        <span className="text-[#2CC7D0] font-semibold">{count.toLocaleString()}</span> people waiting
+        <span className="text-[#2CC7D0] font-semibold">{count.toLocaleString()}</span> beta testers
       </span>
     </div>
   );
 }
 
 // Simple Mobile Menu Component
-function MobileMenu({ onGetStartedClick, isOpen, setIsOpen }: { 
-  onGetStartedClick: () => void
+function MobileMenu({ isOpen, setIsOpen }: { 
   isOpen: boolean
   setIsOpen: (open: boolean) => void
 }) {
@@ -141,8 +140,11 @@ function MobileMenu({ onGetStartedClick, isOpen, setIsOpen }: {
               >
                 FAQ
               </a>
-              <button 
-                onClick={() => { setIsOpen(false); onGetStartedClick(); }}
+              <a 
+                href="https://app.rework.solutions"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setIsOpen(false)}
                 style={{
                   marginTop: '32px',
                   padding: '16px 24px',
@@ -152,11 +154,19 @@ function MobileMenu({ onGetStartedClick, isOpen, setIsOpen }: {
                   borderRadius: '12px',
                   fontSize: '18px',
                   fontWeight: '600',
-                  cursor: 'pointer'
+                  cursor: 'pointer',
+                  textDecoration: 'none',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px'
                 }}
               >
-                Get Started
-              </button>
+                <svg style={{width: '18px', height: '18px'}} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                </svg>
+                GO TO APP
+              </a>
             </div>
           </div>
         </div>
@@ -309,7 +319,7 @@ export default function Home() {
         } else if (response.status === 409) {
           // Duplicate email
           analytics.formError('hero', 'duplicate_email');
-          setEmailError('This email is already on our waitlist!')
+          setEmailError('This email is already registered for beta access!')
         } else {
           // Other errors
           analytics.formError('hero', 'api_error');
@@ -386,7 +396,7 @@ export default function Home() {
         } else if (response.status === 409) {
           // Duplicate email
           analytics.formError('final-cta', 'duplicate_email');
-          setEmailErrorBottom('This email is already on our waitlist!')
+          setEmailErrorBottom('This email is already registered for beta access!')
         } else {
           // Other errors
           analytics.formError('final-cta', 'api_error');
@@ -468,19 +478,20 @@ export default function Home() {
           
           <div className="flex items-center gap-3">
             {/* Premium CTA button */}
-            <button 
-              onClick={handleGetStartedClick}
+            <a 
+              href="https://app.rework.solutions"
+              target="_blank"
+              rel="noopener noreferrer"
               className="hidden md:flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#2CC7D0] to-[#3A7BF7] text-white text-sm font-medium rounded-lg hover:from-[#3A7BF7] hover:to-[#8B5CF6] transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 cursor-pointer"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
               </svg>
-              Get Started
-            </button>
+              GO TO APP
+            </a>
             
             {/* Mobile Menu */}
             <MobileMenu 
-              onGetStartedClick={handleGetStartedClick} 
               isOpen={isMobileMenuOpen} 
               setIsOpen={setIsMobileMenuOpen} 
             />
@@ -538,8 +549,8 @@ export default function Home() {
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                             </svg>
                           </div>
-                          <h3 className="text-lg md:text-xl font-bold text-white mb-2">You're on the list! 🎉</h3>
-                          <p className="text-sm md:text-base text-gray-300">Thanks for joining our waitlist. We'll notify you as soon as ReWork launches!</p>
+                          <h3 className="text-lg md:text-xl font-bold text-white mb-2">Welcome to ReWork Beta! 🎉</h3>
+                          <p className="text-sm md:text-base text-gray-300">Thanks for joining! Check your email for beta access instructions.</p>
                         </div>
                       ) : (
                         // Form State
@@ -590,7 +601,7 @@ export default function Home() {
                                   <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                                   </svg>
-                                  Get Notified
+                                  Join Beta Today
                                 </>
                               )}
                             </button>
@@ -602,7 +613,7 @@ export default function Home() {
                       {!showSuccess && (
                         <div className="mt-3 md:mt-4 text-center space-y-3">
                           <p className="text-sm md:text-base text-gray-300 font-medium">
-                            🚀 Be the first to know when ReWork launches. <span className="text-[#2CC7D0] font-semibold">No spam, ever.</span>
+                            🚀 Ready to optimize your resume? <span className="text-[#2CC7D0] font-semibold">Beta access available now.</span>
                           </p>
                           <SignupCounter />
                         </div>
@@ -782,14 +793,16 @@ export default function Home() {
                   title: "ATS Simulation",
                   description: "Test your resume against simulated ATS systems to ensure it passes automated screenings.",
                   color: "from-[#F97316] to-[#EAB308]",
-                  delay: 0.5
+                  delay: 0.5,
+                  comingSoon: true
                 },
                 {
                   icon: CreditCard,
                   title: "Premium Cover Letters",
                   description: "Generate matching cover letters tailored to each job application.",
                   color: "from-[#EAB308] to-[#22C55E]",
-                  delay: 0.6
+                  delay: 0.6,
+                  comingSoon: true
                 }
               ].map((feature, index) => (
                 <AnimatedSection key={index} delay={feature.delay}>
@@ -798,8 +811,15 @@ export default function Home() {
                          style={{background: `linear-gradient(to right, ${feature.color.split(' ')[1]}, ${feature.color.split(' ')[3]})`}} />
                     <Card className="relative h-full border-0 bg-card backdrop-blur-xl shadow-lg hover:shadow-xl transition-all duration-500 group-hover:scale-105">
                       <CardHeader className="p-4 md:p-6">
-                        <div className={`mb-3 md:mb-4 flex h-12 w-12 md:h-14 md:w-14 items-center justify-center rounded-xl bg-gradient-to-r ${feature.color} shadow-lg`}>
-                          <feature.icon className="h-6 w-6 md:h-7 md:w-7 text-white" />
+                        <div className="relative">
+                          <div className={`mb-3 md:mb-4 flex h-12 w-12 md:h-14 md:w-14 items-center justify-center rounded-xl bg-gradient-to-r ${feature.color} shadow-lg`}>
+                            <feature.icon className="h-6 w-6 md:h-7 md:w-7 text-white" />
+                          </div>
+                          {feature.comingSoon && (
+                            <div className="absolute -top-2 -right-2 bg-gradient-to-r from-yellow-500 to-orange-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg">
+                              Coming Soon
+                            </div>
+                          )}
                         </div>
                         <CardTitle className="text-lg md:text-xl font-bold text-card-foreground">
                           {feature.title}
@@ -852,16 +872,16 @@ export default function Home() {
                       answer: "Our AI analyzes both your resume and the job description to identify key skills, requirements, and terminology. It then restructures your resume to highlight relevant experience and incorporate important keywords, increasing your chances of passing ATS screening and impressing hiring managers."
                     },
                     {
-                      question: "When will ReWork be available?",
-                      answer: "We're working hard to launch ReWork in July 2025. Sign up for our waitlist to be notified as soon as we're live and get early access to the platform."
+                      question: "How do I get started with ReWork?",
+                      answer: "ReWork is currently in beta testing! Click the 'GO TO APP' button to access the platform. Create your account, upload your resume, and start tailoring it for your target jobs. Beta users get early access to all features and help shape the final product."
                     },
                     {
                       question: "Is my data secure with ReWork?",
                       answer: "Absolutely. We take data security seriously. Your resume data and job descriptions are encrypted and stored securely. We never share your personal information with third parties, and you can delete your data at any time."
                     },
                     {
-                      question: "Can I use ReWork for any industry or job type?",
-                      answer: "Yes! ReWork is designed to work across all industries and job types. Our AI has been trained on millions of resumes and job descriptions from various sectors, from tech and healthcare to finance, education, and more."
+                      question: "What's included in the beta version?",
+                      answer: "The beta includes our core AI-powered resume tailoring, multiple professional templates, keyword optimization, and cloud storage. Advanced features like ATS simulation and premium cover letters are coming soon. Beta testers get lifetime discounts on premium features!"
                     }
                   ].map((item, index) => (
                     <AccordionItem key={index} value={`item-${index + 1}`} className="group relative">
@@ -908,7 +928,7 @@ export default function Home() {
                     </span>
                   </h2>
                   <p className="max-w-[800px] text-lg md:text-xl text-gray-300 px-4">
-                    Join our waitlist and be the first to experience AI-powered resume optimization
+                    Start beta testing ReWork today and experience AI-powered resume optimization
                   </p>
                 </div>
                 <div className="w-full max-w-lg">
@@ -924,8 +944,8 @@ export default function Home() {
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                           </svg>
                         </div>
-                        <h3 className="text-lg md:text-xl font-bold text-white mb-2">Welcome to the waitlist! 🚀</h3>
-                        <p className="text-sm md:text-base text-gray-300">You'll be among the first to experience ReWork when we launch!</p>
+                        <h3 className="text-lg md:text-xl font-bold text-white mb-2">Welcome to ReWork Beta! 🚀</h3>
+                        <p className="text-sm md:text-base text-gray-300">Thanks for joining! Check your email for beta access instructions.</p>
                       </div>
                     ) : (
                       // Form State  
@@ -974,7 +994,7 @@ export default function Home() {
                                 <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                                 </svg>
-                                Get Notified
+                                Start Beta Testing
                               </>
                             )}
                           </button>
@@ -985,7 +1005,7 @@ export default function Home() {
                     {!showSuccessBottom && (
                       <div className="mt-3 md:mt-4 text-center">
                         <p className="text-xs md:text-sm text-gray-400">
-                          🚀 <span className="text-[#2CC7D0] font-semibold">No spam, ever.</span>
+                          🚀 <span className="text-[#2CC7D0] font-semibold">Beta access available now.</span>
                         </p>
                       </div>
                     )}

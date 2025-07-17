@@ -72,7 +72,7 @@ export function EmailCapture({ variant = "default", className = "" }: EmailCaptu
         >
           <CheckCircle className="h-6 w-6" />
         </motion.div>
-        <span className="font-semibold text-lg">Thanks! We'll notify you when we launch.</span>
+        <span className="font-semibold text-lg">Welcome to ReWork Beta! Check your email for access.</span>
       </motion.div>
     )
   }
@@ -125,7 +125,7 @@ export function EmailCapture({ variant = "default", className = "" }: EmailCaptu
             ) : (
               <div className="flex items-center space-x-2">
                 <Sparkles className="h-5 w-5 group-hover:scale-110 transition-transform" />
-                <span className="font-semibold">Get Notified</span>
+                <span className="font-semibold">Join Beta</span>
                 <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </div>
             )}
@@ -150,7 +150,7 @@ export function EmailCapture({ variant = "default", className = "" }: EmailCaptu
             ? "text-white/70" 
             : "text-gray-500 dark:text-gray-400"
         }`}>
-          🚀 Be the first to know when ReWork launches. No spam, ever.
+          🚀 Ready to optimize your resume? Beta access available now.
         </p>
       </form>
     </div>

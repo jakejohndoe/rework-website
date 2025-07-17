@@ -147,7 +147,7 @@ export default function AdminDashboardClient({ emails }: { emails: EmailSignup[]
               </span>
             </h1>
             <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-              Real-time insights into your waitlist performance and user engagement
+              Real-time insights into your beta signup performance and user engagement
             </p>
             
             {/* Subtle logout button */}
@@ -405,7 +405,7 @@ export default function AdminDashboardClient({ emails }: { emails: EmailSignup[]
                 <div className="p-16 text-center">
                   <div className="text-6xl mb-4">📬</div>
                   <h3 className="text-2xl font-bold text-white mb-2">No signups yet</h3>
-                  <p className="text-gray-400">Your first waitlist subscriber will appear here!</p>
+                  <p className="text-gray-400">Your first beta subscriber will appear here!</p>
                 </div>
               )}
             </div>
