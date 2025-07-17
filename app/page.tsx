@@ -432,9 +432,9 @@ export default function Home() {
                 <Image
                   src="/rework-logo-simple-cropped.png"
                   alt="ReWork"
-                  width={120}
-                  height={120}
-                  className="h-24 w-24 md:h-30 md:w-30 group-hover:scale-110 transition-all duration-300 object-contain"
+                  width={60}
+                  height={60}
+                  className="h-12 w-12 md:h-15 md:w-15 group-hover:scale-110 transition-all duration-300 object-contain"
                 />
                 <div className="absolute inset-0 bg-[#2CC7D0]/10 rounded-lg blur-lg group-hover:blur-xl group-hover:bg-[#3A7BF7]/15 transition-all duration-300" />
               </div>
