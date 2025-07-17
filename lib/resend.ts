@@ -22,7 +22,7 @@ export async function sendWelcomeEmail({ email, source = 'unknown' }: WelcomeEma
     const { data, error } = await resend.emails.send({
       from: 'ReWork <hello@rework.solutions>', // ✅ Updated to custom domain
       to: [testEmail],
-      subject: `🚀 Welcome to ReWork - ${email} joined the waitlist!`,
+      subject: `🎆 Your ReWork Beta Access is Ready! Start optimizing now →`,
       html: getWelcomeEmailHTML(email, source),
       text: getWelcomeEmailText(email, source), // Add plain text version
     });
@@ -49,10 +49,10 @@ export async function sendSignupNotification(userEmail: string, source: string) 
     const { data, error } = await resend.emails.send({
       from: 'ReWork <hello@rework.solutions>',
       to: 'hello@rework.solutions', // this sends to YOU
-      subject: `🎉 New ReWork Signup!`,
+      subject: `🎆 New ReWork Beta User!`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; background: #f8fafc; padding: 40px; border-radius: 12px;">
-          <h2 style="color: #0f172a; margin-bottom: 24px;">New waitlist signup! 🚀</h2>
+          <h2 style="color: #0f172a; margin-bottom: 24px;">New beta user joined! 🎆</h2>
           <div style="background: white; padding: 24px; border-radius: 8px; border-left: 4px solid #2CC7D0;">
             <p style="margin: 8px 0; color: #374151;"><strong>Email:</strong> ${userEmail}</p>
             <p style="margin: 8px 0; color: #374151;"><strong>Source:</strong> ${source}</p>
@@ -107,18 +107,21 @@ function getWelcomeEmailHTML(email: string, source: string): string {
         .email-container {
           max-width: 640px;
           margin: 0 auto;
-          background: linear-gradient(135deg, #0A0F1C 0%, #1E293B 50%, #0F172A 100%);
-          border-radius: 16px;
+          background: linear-gradient(135deg, #0A0F1C 0%, #1E293B 30%, #2D1B69 70%, #0F172A 100%);
+          border-radius: 20px;
           overflow: hidden;
-          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+          box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.05);
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
         }
         
         .header {
-          background: linear-gradient(135deg, #2CC7D0 0%, #3A7BF7 50%, #8B5CF6 100%);
+          background: linear-gradient(135deg, #2CC7D0 0%, #3A7BF7 30%, #8B5CF6 70%, #D946EF 100%);
           padding: 50px 40px;
           text-align: center;
           position: relative;
           overflow: hidden;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         .header::before {
@@ -172,6 +175,9 @@ function getWelcomeEmailHTML(email: string, source: string): string {
           color: #2CC7D0;
           text-transform: uppercase;
           letter-spacing: 1px;
+          backdrop-filter: blur(8px);
+          -webkit-backdrop-filter: blur(8px);
+          box-shadow: 0 4px 16px rgba(44, 199, 208, 0.2);
         }
         
         .welcome-title {
@@ -179,12 +185,13 @@ function getWelcomeEmailHTML(email: string, source: string): string {
           font-weight: 800;
           margin-bottom: 24px;
           text-align: center;
-          background: linear-gradient(135deg, #2CC7D0 0%, #3A7BF7 50%, #8B5CF6 100%);
+          background: linear-gradient(135deg, #2CC7D0 0%, #3A7BF7 30%, #8B5CF6 70%, #D946EF 100%);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           background-clip: text;
           line-height: 1.2;
           letter-spacing: -1px;
+          text-shadow: 0 0 30px rgba(139, 92, 246, 0.3);
         }
         
         .intro-text {
@@ -194,6 +201,12 @@ function getWelcomeEmailHTML(email: string, source: string): string {
           text-align: center;
           color: #E2E8F0;
           font-weight: 400;
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          border-radius: 16px;
+          padding: 24px;
+          backdrop-filter: blur(10px);
+          -webkit-backdrop-filter: blur(10px);
         }
         
         .features-grid {
@@ -204,13 +217,15 @@ function getWelcomeEmailHTML(email: string, source: string): string {
         }
         
         .feature-card {
-          background: rgba(255, 255, 255, 0.03);
-          border: 1px solid rgba(255, 255, 255, 0.08);
+          background: rgba(255, 255, 255, 0.05);
+          border: 1px solid rgba(255, 255, 255, 0.10);
           border-radius: 16px;
           padding: 28px;
           transition: all 0.3s ease;
           position: relative;
           overflow: hidden;
+          backdrop-filter: blur(10px);
+          -webkit-backdrop-filter: blur(10px);
         }
         
         .feature-card::before {
@@ -246,9 +261,12 @@ function getWelcomeEmailHTML(email: string, source: string): string {
           text-align: center;
           margin: 50px 0;
           padding: 40px;
-          background: rgba(255, 255, 255, 0.02);
+          background: rgba(255, 255, 255, 0.05);
           border-radius: 20px;
-          border: 1px solid rgba(255, 255, 255, 0.05);
+          border: 1px solid rgba(255, 255, 255, 0.10);
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
+          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
         }
         
         .cta-text {
@@ -271,6 +289,9 @@ function getWelcomeEmailHTML(email: string, source: string): string {
           text-transform: uppercase;
           box-shadow: 0 8px 32px rgba(44, 199, 208, 0.3);
           transition: all 0.3s ease;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          backdrop-filter: blur(10px);
+          -webkit-backdrop-filter: blur(10px);
         }
         
         .cta-button:hover {
@@ -283,6 +304,8 @@ function getWelcomeEmailHTML(email: string, source: string): string {
           text-align: center;
           border-top: 1px solid rgba(255, 255, 255, 0.08);
           background: rgba(0, 0, 0, 0.2);
+          backdrop-filter: blur(10px);
+          -webkit-backdrop-filter: blur(10px);
         }
         
         .footer-brand {
@@ -356,16 +379,16 @@ function getWelcomeEmailHTML(email: string, source: string): string {
             <!-- Welcome Badge -->
             <div style="text-align: center;">
               <div class="welcome-badge">
-                🎉 Welcome to the future
+                🎆 BETA ACCESS GRANTED
               </div>
             </div>
             
             <!-- Main Title -->
-            <h1 class="welcome-title">You're on the list!</h1>
+            <h1 class="welcome-title">Welcome to ReWork Beta!</h1>
             
             <!-- Intro Text -->
             <p class="intro-text">
-              Welcome to the ReWork family. We're thrilled you've joined our waitlist and can't wait to help you land your dream job with AI-powered resume optimization.
+              🎯 Welcome to the ReWork beta community! You're now part of an exclusive group of early adopters testing the future of AI-powered resume optimization. Your beta access is <strong>active and ready</strong> – start transforming your job search today!
             </p>
 
             <!-- Features Grid -->
@@ -374,7 +397,7 @@ function getWelcomeEmailHTML(email: string, source: string): string {
                 <span class="feature-icon">🎯</span>
                 <div class="feature-title">AI-Powered Tailoring</div>
                 <div class="feature-description">
-                  Intelligent resume optimization for specific job applications that beats ATS systems every time.
+                  🎯 Experience intelligent resume optimization for specific job applications. <strong>Available now in beta!</strong>
                 </div>
               </div>
 
@@ -382,7 +405,7 @@ function getWelcomeEmailHTML(email: string, source: string): string {
                 <span class="feature-icon">⚡</span>
                 <div class="feature-title">Lightning Fast</div>
                 <div class="feature-description">
-                  Generate perfectly optimized resumes in seconds, not hours. More time for applications, less time formatting.
+                  ⚡ Generate perfectly optimized resumes in seconds. <strong>Test it yourself</strong> with our live beta platform.
                 </div>
               </div>
 
@@ -390,15 +413,15 @@ function getWelcomeEmailHTML(email: string, source: string): string {
                 <span class="feature-icon">📊</span>
                 <div class="feature-title">Real-Time Feedback</div>
                 <div class="feature-description">
-                  Get instant suggestions and improvements to maximize your interview potential with every application.
+                  📊 Get instant suggestions and improvements. <strong>Start optimizing</strong> your resume today with beta access.
                 </div>
               </div>
 
               <div class="feature-card">
                 <span class="feature-icon">🚀</span>
-                <div class="feature-title">Interview Ready</div>
+                <div class="feature-title">Exclusive Beta Access</div>
                 <div class="feature-description">
-                  Land more interviews with resumes that stand out from the crowd and speak directly to hiring managers.
+                  🎆 You're part of our exclusive beta community helping shape the future of AI-powered job applications. <strong>Your feedback matters!</strong>
                 </div>
               </div>
             </div>
@@ -406,10 +429,10 @@ function getWelcomeEmailHTML(email: string, source: string): string {
             <!-- CTA Section -->
             <div class="cta-section">
               <p class="cta-text">
-                We're putting the finishing touches on ReWork and will notify you the <strong>moment</strong> we go live.
+                🚀 ReWork beta is <strong>live and ready</strong> for you to explore! Your exclusive beta access grants you immediate entry to the future of resume optimization.
               </p>
-              <a href="https://rework.solutions" class="cta-button">
-                Visit Our Website
+              <a href="https://app.rework.solutions" class="cta-button">
+                ⚡ START BETA TESTING
               </a>
             </div>
 
@@ -418,7 +441,7 @@ function getWelcomeEmailHTML(email: string, source: string): string {
           <!-- Footer -->
           <div class="footer">
             <div class="footer-brand">The ReWork Team</div>
-            <div class="footer-text">Thanks for believing in the future of job searching!</div>
+            <div class="footer-text">Thanks for being part of our beta community!</div>
             
             <div class="social-links">
               <a href="https://x.com/reworkapp">Twitter</a>
@@ -426,7 +449,7 @@ function getWelcomeEmailHTML(email: string, source: string): string {
             </div>
             
             <div class="unsubscribe">
-              You received this email because you signed up for ReWork updates via our ${source} form.<br>
+              You received this email because you joined our exclusive ReWork beta community via our ${source} form.<br>
               <a href="${unsubscribeUrl}">Unsubscribe</a> if you no longer want to receive these emails.
             </div>
           </div>
@@ -445,22 +468,23 @@ function getWelcomeEmailText(email: string, source: string): string {
   return `
 REWORK - Smart tech, for smarter jobs
 
-🎉 You're on the list!
+🎉 Welcome to ReWork Beta!
 
-Hey there! Welcome to the ReWork family. We're thrilled you've joined our waitlist and can't wait to help you land your dream job with AI-powered resume optimization.
+Hey there! Welcome to the ReWork beta community! You're now part of an exclusive group testing the future of AI-powered resume optimization. Ready to transform your job search?
 
-Here's what you can expect when we launch:
+Here's what you can experience right now in beta:
 
 🎯 AI-powered resume tailoring for specific job applications
 🚀 ATS optimization to get past applicant tracking systems  
 ⚡ Generate optimized resumes in seconds, not hours
 📊 Real-time feedback and improvement suggestions
+🎆 Exclusive beta community access
 
-We're putting the finishing touches on ReWork and will notify you the MOMENT we go live. You'll be among the first to experience the future of job applications.
+ReWork beta is LIVE and ready for you to explore! Start optimizing your resume today and be part of shaping the future of job applications.
 
-Visit our website: https://rework.solutions
+Access the beta app: https://app.rework.solutions
 
-Thanks for believing in the future of job searching!
+Thanks for being part of our beta community!
 The ReWork Team
 
 Social Links:
@@ -468,7 +492,7 @@ Twitter: https://x.com/reworkapp
 LinkedIn: https://www.linkedin.com/in/reworkapp/
 
 ---
-You received this email because you signed up for ReWork updates via our ${source} form.
+You received this email because you joined our exclusive ReWork beta community via our ${source} form.
 Unsubscribe: ${unsubscribeUrl}
   `;
 }
