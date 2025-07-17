@@ -20,8 +20,8 @@ export function EmailCapture({ variant = "default", className = "" }: EmailCaptu
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
-    // Basic email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    // Enhanced email validation - supports modern domains like arcin.io
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
     if (!emailRegex.test(email)) {
       setError("Please enter a valid email address")
       return
@@ -31,8 +31,8 @@ export function EmailCapture({ variant = "default", className = "" }: EmailCaptu
     setError("")
 
     try {
-      // TODO: Replace with actual API call to save email to MongoDB
-      const response = await fetch("/api/waitlist", {
+      // Call the actual email signup API
+      const response = await fetch("/api/emails", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

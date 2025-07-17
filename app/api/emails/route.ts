@@ -94,8 +94,8 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Basic email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    // Enhanced email validation - supports modern domains like arcin.io
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!email || !emailRegex.test(email)) {
       return NextResponse.json(
         { error: 'Invalid email address' },

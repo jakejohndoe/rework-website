@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     default: "ReWork - Smart Tech, For Smarter Jobs",
     template: "%s | ReWork"
   },
-  description: "Tailor your resume in seconds with AI-powered optimization. Beat ATS systems, get more interviews, and land your dream job with ReWork's intelligent resume builder.",
+  description: "AI-powered resume optimization. Beat ATS systems and land more interviews with tailored resumes in seconds.",
   keywords: [
     "AI resume builder",
     "resume optimization", 
